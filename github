@@ -36,12 +36,14 @@
 #   0 - success
 #   1 - incorrect usage
 #   2 - GitHub error
+#   3 - git error
 
 
 # exit codes
 SUCCESS=0
 INCORRECT_USAGE=1
 GITHUB_ERROR=2
+GIT_ERROR=3
 
 
 #######################################
@@ -126,14 +128,35 @@ fi
 echo -e "Production branch cloned\n"
 
 
+echo "Marking '${prodp}' as a Git safe directory..."
+eval "git config --global --add safe.directory '${prodp}'"
+if [ $? -ne 0 ]; then
+    echo "Error marking production directory as safe"
+    echo -e "\nGoodbye..."
+    exit ${GIT_ERROR}
+fi
+echo -e "Production directory marked safe\n"
+
+
+echo "Creating test branch..."
 eval "cd '${prodp}'"
 eval "git branch test"
 if [ $? -ne 0 ]; then
     echo "Error creating test branch"
     echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
+    exit ${GIT_ERROR}
 fi
 echo -e "Test branch created\n"
+
+
+echo "Pushing test branch to remote repository..."
+eval "git push --set-upstream origin test"
+if [ $? -ne 0 ]; then
+    echo "Error pushing test branch to remote repository"
+    echo -e "\nGoodbye..."
+    exit ${GITHUB_ERROR}
+fi
+echo -e "Test branch pushed to remote repository\n"
 
 
 echo "Cloning test branch into '${testp}'..."
@@ -144,6 +167,16 @@ if [ $? -ne 0 ]; then
     exit ${GITHUB_ERROR}
 fi
 echo -e "Test branch cloned\n"
+
+
+echo "Marking '${testp}' as a Git safe directory..."
+eval "git config --global --add safe.directory '${testp}'"
+if [ $? -ne 0 ]; then
+    echo "Error marking test directory as safe"
+    echo -e "\nGoodbye..."
+    exit ${GITHUB_ERROR}
+fi
+echo -e "Test directory marked safe\n"
 
 
 echo "The 'prod' branch of ${owner}/${repo} is not protected."
