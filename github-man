@@ -1,0 +1,42 @@
+.TH GITHUB 1 "July 2022" "1.0" "Automation Manual"
+
+.SH NAME
+github \- create a new github repository
+
+.SH SYNOPSIS
+github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>] [-t <test-directory>] [-p <prod-directory>] [-h]
+
+.SH DESCRIPTION
+Creates a new GitHub repository with test and production branches and clones the branches locally.
+
+.SH OPTIONS
+.TP
+-o <owner>
+Owner of the repository. Defaults to "SituDevelopment".
+
+.TP
+-r <repository>
+Name of the repository. Defaults to the name of the curent working directory.
+
+.TP
+-d <description>
+Description of the repository. Defaults to the empty string.
+
+.TP
+-v <visibility>
+Visibility of the repository: "private", "public", or internal". Defaults to "private".
+
+.TP
+-t <test-directory>
+Path of the test directory. Defaults to "/var/www/test/<repository>".
+
+.TP
+-p <prod-directory>
+Path of the production directory. Defaults to "/var/www/prod/<repository>".
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)

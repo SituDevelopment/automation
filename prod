@@ -1,0 +1,154 @@
+#!/usr/bin/bash
+#
+#
+# Pushes the contents of the test branch to the production branch of the
+# repository cloned into the current working directory, pulls the changes to the
+# local working copy and restarts the production service.
+#
+# Usage: prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
+#             [-n <request-name> [-d <description>] [-f <directory>] [-h]
+#
+# Options:
+#   -t <test-branch>      Name of the branch from which to pull changes.
+#                         Defaults to "test".
+#
+#   -p <prod-branch>      Name of the branch into which to push changes.
+#                         Defaults to "prod".
+#
+#   -s <service-name>     Name of the production service to restart.
+#                         Defaults to the name of the current working directory.
+#
+#   -n <request-name>     Title for the pull request.
+#                         Defaults to "Pushed to production".
+#
+#   -d <description>      Description for the pull request.
+#                         Defaults to the empty string.
+#
+#   -f <directory>        Directory into which to pull the updated production branch.
+#                         Defaults to "/var/www/prod/<service-name>".
+#
+#   -h                    Display help and exit.
+#
+#
+# Exit codes:
+#   0 - success
+#   1 - incorrect usage
+#   2 - GitHub error
+#   3 - service error
+
+
+# exit codes
+SUCCESS=0
+INCORRECT_USAGE=1
+GITHUB_ERROR=2
+SERVICE_ERROR=3
+
+
+#######################################
+# Display help message.
+# Arguments:
+#   None
+# Outputs:
+#   Writes help message to stdout
+#######################################
+showhelp() {
+cat << EOF
+Usage: prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
+            [-n <request-name>] [-d <description>] [-f <directory>] [-h]
+
+Pushes the contents of the test branch to the production branch of the
+repository cloned into the current working directory, pulls the changes to the
+local working copy of the production branch and restarts the production service.
+
+Options:
+    -t <test-branch>    Name of the branch from which to pull changes.
+                        Defaults to "test".
+
+    -p <prod-branch>    Name of the branch into which to push changes.
+                        Defaults to "prod".
+
+    -s <service-name>   Name of the production service to restart.
+                        Defaults to the name of the current working directory.
+
+    -n <request-name>   Title for the pull request.
+                        Defaults to "Pushed to production".
+
+    -d <description>    Description for the pull request.
+                        Defaults to the empty string.
+
+    -f <directory>      Directory into which to pull the updated production branch.
+                        Defaults to "/var/www/prod/<service-name>".
+
+    -h                  Display help and exit.
+EOF
+}
+
+
+# assign branch and service variables according to given arguments
+while getopts ":t:p:s:n:d:f:h" flag; do
+    case "${flag}" in
+        t) testb="${OPTARG}" ;;
+        p) prod="${OPTARG}" ;;
+        s) serv="${OPTARG}" ;;
+        n) name="${OPTARG}" ;;
+        d) desc="${OPTARG}" ;;
+        f) prodp="${OPTARG}" ;;
+        h) showhelp; exit ${SUCCESS} ;;
+        ?) showhelp; exit ${INCORRECT_USAGE} ;;
+    esac
+done
+
+# set default values for unset variables
+## GitHub variables
+testb=${testb:="test"}
+prod=${prod:="prod"}
+name=${name:="Pushed to production"}
+desc=${desc:=""}
+## service variables
+serv=${serv:="$(basename ${PWD})"}
+prodp=${prodp:="/var/www/prod/${serv}"}
+
+
+echo "Creating pull request..."
+eval "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'"
+if [ $? -ne 0 ]; then
+    echo "Error creating pull request"
+    echo -e "\nGoodbye..."
+    exit ${GITHUB_ERROR}
+fi
+echo -e "Pull request created\n"
+
+
+echo "Merging pull request..."
+eval "gh pr merge ${testb} --merge"
+if [ $? -ne 0 ]; then
+    echo "Error merging pull request"
+    echo -e "\nGoodbye..."
+    exit ${GITHUB_ERROR}
+fi
+echo -e "Pull request merged\n"
+
+
+echo "Pulling production branch to working copy..."
+eval "cd ${prodp} && git pull && cd -"
+if [ $? -ne 0 ]; then
+    echo "Error pulling production branch to working copy"
+    echo -e "\nGoodbye..."
+    exit ${GITHUB_ERROR}
+fi
+echo -e "Production branch pulled\n"
+
+
+echo "Restarting ${serv}.service..."
+eval "sudo service ${serv} restart"
+if [ $? -ne 0 ]; then
+    echo "Error restarting ${serv}.service"
+    echo -e "\nGoodbye..."
+    exit ${SERVICE_ERROR}
+fi
+echo -e "${serv}.service restarted\n"
+
+
+echo "Goodbye..."
+exit ${SUCCESS}
+

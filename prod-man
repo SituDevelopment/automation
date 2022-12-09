@@ -1,0 +1,52 @@
+.TH PROD 1 "July 2022" "1.0" "Automation Manual"
+
+.SH NAME
+prod \- push a test branch to production
+
+.SH SYNOPSIS
+prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
+     [-n <request-name>] [-d <description>] [-f <directory>] [-h]
+
+.SH DESCRIPTION
+Pushes the contents of the test branch to the production branch of the
+repository cloned into the current working directory, pulls the changes to the
+local working copy and restarts the production service.
+
+.SH OPTIONS
+.TP
+-t <test-branch>
+Name of the branch from which to pull changes.
+Defaults to "test".
+
+.TP
+-p <prod-branch>
+Name of the branch into which to push changes.
+Defaults to "prod".
+
+.TP
+-s <service-name>
+Name of the production service to restart.
+Defaults to the name of the current working directory.
+
+.TP
+-n <request-name>
+Title for the pull request.
+Defaults to "Pushed to production".
+
+.TP
+-d <description>
+Description for the pull request.
+Defaults to the empty string.
+
+.TP
+-f <directory>
+Directory into which to pull the updated production branch.
+Defaults to "/var/www/prod/<service-name>".
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)
+
