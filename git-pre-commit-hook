@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+#
+# Runs the Black formatter on all local Python files before committing
+
+black .
