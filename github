@@ -84,6 +84,25 @@ EOF
 }
 
 
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - command to run
+#   $2 - error message to print on failure
+#   $3 - exit code to use on failure
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    eval $1
+    if [ $? -ne 0 ]; then
+        echo "$2"
+        echo -e "\nGoodbye..."
+        exit $3
+    fi
+}
+
+
 # assign repository and branch variables according to given arguments
 while getopts ":o:r:d:v:t:p:h" flag; do
     case "${flag}" in
@@ -109,73 +128,52 @@ prodp=${prodp:="/var/www/prod/${repo}"}
 
 
 echo "Creating repository..."
-eval "gh repo create '${owner}/${repo}' --description '${desc}' --${vis} --template SituDevelopment/template"
-if [ $? -ne 0 ]; then
-    echo "Error creating repository"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "gh repo create '${owner}/${repo}' --description '${desc}' --${vis} --template SituDevelopment/template" \
+               "Error creating repository" \
+               ${GITHUB_ERROR}
 echo -e "Repository created\n"
 
 
 echo "Cloning production branch into '${prodp}'..."
-eval "git clone --branch 'prod' 'git@github.com:${owner}/${repo}' '${prodp}'"
-if [ $? -ne 0 ]; then
-    echo "Error cloning production branch"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "git clone --branch 'prod' 'git@github.com:${owner}/${repo}' '${prodp}'" \
+               "Error cloning production branch" \
+               ${GITHUB_ERROR}
 echo -e "Production branch cloned\n"
 
 
 echo "Marking '${prodp}' as a Git safe directory..."
-eval "git config --global --add safe.directory '${prodp}'"
-if [ $? -ne 0 ]; then
-    echo "Error marking production directory as safe"
-    echo -e "\nGoodbye..."
-    exit ${GIT_ERROR}
-fi
+assert_success "git config --global --add safe.directory '${prodp}'" \
+               "Error marking production directory as safe" \
+               ${GIT_ERROR}
 echo -e "Production directory marked safe\n"
 
 
 echo "Creating test branch..."
 eval "cd '${prodp}'"
-eval "git branch test"
-if [ $? -ne 0 ]; then
-    echo "Error creating test branch"
-    echo -e "\nGoodbye..."
-    exit ${GIT_ERROR}
-fi
+assert_success "git branch test" \
+               "Error creating test branch" \
+               ${GIT_ERROR}
 echo -e "Test branch created\n"
 
 
 echo "Pushing test branch to remote repository..."
-eval "git push --set-upstream origin test"
-if [ $? -ne 0 ]; then
-    echo "Error pushing test branch to remote repository"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "git push --set-upstream origin test" \
+               "Error pushing test branch to remote repository" \
+               ${GITHUB_ERROR}
 echo -e "Test branch pushed to remote repository\n"
 
 
 echo "Cloning test branch into '${testp}'..."
-eval "git clone --branch 'test' 'git@github.com:${owner}/${repo}' '${testp}'"
-if [ $? -ne 0 ]; then
-    echo "Error cloning test branch"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "git clone --branch 'test' 'git@github.com:${owner}/${repo}' '${testp}'" \
+               "Error cloning test branch" \
+               ${GITHUB_ERROR}
 echo -e "Test branch cloned\n"
 
 
 echo "Marking '${testp}' as a Git safe directory..."
-eval "git config --global --add safe.directory '${testp}'"
-if [ $? -ne 0 ]; then
-    echo "Error marking test directory as safe"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "git config --global --add safe.directory '${testp}'" \
+               "Error marking test directory as safe" \
+               ${GITHUB_ERROR}
 echo -e "Test directory marked safe\n"
 
 
@@ -186,4 +184,3 @@ echo "Then, unchecked 'Require approvals'."
 
 
 exit ${SUCCESS}
-

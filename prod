@@ -84,6 +84,25 @@ EOF
 }
 
 
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - command to run
+#   $2 - error message to print on failure
+#   $3 - exit code to use on failure
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    eval $1
+    if [ $? -ne 0 ]; then
+        echo "$2"
+        echo -e "\nGoodbye..."
+        exit $3
+    fi
+}
+
+
 # assign branch and service variables according to given arguments
 while getopts ":t:p:s:n:d:f:h" flag; do
     case "${flag}" in
@@ -110,42 +129,30 @@ prodp=${prodp:="/var/www/prod/${serv}"}
 
 
 echo "Creating pull request..."
-eval "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'"
-if [ $? -ne 0 ]; then
-    echo "Error creating pull request"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'" \
+               "Error creating pull request" \
+               ${GITHUB_ERROR}
 echo -e "Pull request created\n"
 
 
 echo "Merging pull request..."
-eval "gh pr merge ${testb} --merge"
-if [ $? -ne 0 ]; then
-    echo "Error merging pull request"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "gh pr merge ${testb} --merge" \
+               "Error merging pull request" \
+               ${GITHUB_ERROR}
 echo -e "Pull request merged\n"
 
 
 echo "Pulling production branch to working copy..."
-eval "cd ${prodp} && git pull && cd -"
-if [ $? -ne 0 ]; then
-    echo "Error pulling production branch to working copy"
-    echo -e "\nGoodbye..."
-    exit ${GITHUB_ERROR}
-fi
+assert_success "cd ${prodp} && git pull && cd -" \
+               "Error pulling production branch to working copy" \
+               ${GITHUB_ERROR}
 echo -e "Production branch pulled\n"
 
 
 echo "Restarting ${serv}.service..."
-eval "sudo service ${serv} restart"
-if [ $? -ne 0 ]; then
-    echo "Error restarting ${serv}.service"
-    echo -e "\nGoodbye..."
-    exit ${SERVICE_ERROR}
-fi
+assert_success "sudo service ${serv} restart" \
+               "Error restarting ${serv}.service" \
+               ${SERVICE_ERROR}
 echo -e "${serv}.service restarted\n"
 
 
