@@ -142,7 +142,7 @@ echo -e "Production branch cloned\n"
 
 
 echo "Marking '${prodp}' as a Git safe directory..."
-assert_success "git config --global --add safe.directory '${prodp}'" \
+assert_success "git config --system --add safe.directory '${prodp}'" \
                "Error marking production directory as safe" \
                ${GIT_ERROR}
 echo -e "Production directory marked safe\n"
@@ -171,7 +171,7 @@ echo -e "Test branch cloned\n"
 
 
 echo "Marking '${testp}' as a Git safe directory..."
-assert_success "git config --global --add safe.directory '${testp}'" \
+assert_success "git config --system --add safe.directory '${testp}'" \
                "Error marking test directory as safe" \
                ${GITHUB_ERROR}
 echo -e "Test directory marked safe\n"
