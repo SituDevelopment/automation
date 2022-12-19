@@ -1,5 +1,21 @@
 #!/usr/bin/bash
 #
-# Runs the Black formatter on all local Python files before committing
+# Runs commands which help to ensure consistency across codebases.
 
-black .
+
+# if a python project with a virtual environment, update its pip requirements
+if [ -d "venv" ]; then
+    source venv/bin/activate
+    pip freeze > requirements.txt
+    deactivate
+    git add requirements.txt
+fi
+
+
+# runs linters and formatters
+black .  # .py files
+
+
+# re-adds files which are already intended to be committed
+# ensuring formatting changes are included in the commit
+git add `git diff --staged --name-only`
