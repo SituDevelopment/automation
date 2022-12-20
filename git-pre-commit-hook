@@ -13,7 +13,8 @@ fi
 
 
 # runs linters and formatters
-black .  # .py files
+black .                 # .py files
+npx prettier --write .  # .css, .html, .js and .json files
 
 
 # re-adds files which are already intended to be committed
