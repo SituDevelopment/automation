@@ -87,19 +87,23 @@ EOF
 #######################################
 # Asserts the given command runs successfully.
 # Arguments:
-#   $1 - command to run
-#   $2 - error message to print on failure
-#   $3 - exit code to use on failure
+#   $1 - message to print before running command
+#   $2 - command to run
+#   $3 - error message to print on failure
+#   $4 - exit code to use on failure
+#   $5 - success message to print on success
 # Outputs:
 #   Writes error message to stdout
 #######################################
 assert_success() {
-    eval $1
+    echo $1
+    eval $2
     if [ $? -ne 0 ]; then
-        echo "$2"
+        echo "$3"
         echo -e "\nGoodbye..."
-        exit $3
+        exit $4
     fi
+    echo -e $5
 }
 
 
@@ -128,32 +132,32 @@ serv=${serv:="$(basename ${PWD})"}
 prodp=${prodp:="/var/www/prod/${serv}"}
 
 
-echo "Creating pull request..."
-assert_success "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'" \
+assert_success "Creating pull request..." \
+               "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'" \
                "Error creating pull request" \
-               ${GITHUB_ERROR}
-echo -e "Pull request created\n"
+               ${GITHUB_ERROR} \
+               "Pull request created\n"
 
 
-echo "Merging pull request..."
-assert_success "gh pr merge ${testb} --merge" \
+assert_success "Merging pull request..." \
+               "gh pr merge ${testb} --merge" \
                "Error merging pull request" \
-               ${GITHUB_ERROR}
-echo -e "Pull request merged\n"
+               ${GITHUB_ERROR} \
+               "Pull request merged\n"
 
 
-echo "Pulling production branch to working copy..."
-assert_success "cd ${prodp} && git pull && cd -" \
+assert_success "Pulling production branch to working copy..." \
+               "cd ${prodp} && git pull && cd -" \
                "Error pulling production branch to working copy" \
-               ${GITHUB_ERROR}
-echo -e "Production branch pulled\n"
+               ${GITHUB_ERROR} \
+               "Production branch pulled\n"
 
 
-echo "Restarting ${serv}.service..."
-assert_success "sudo service ${serv} restart" \
+assert_success "Restarting ${serv}.service..." \
+               "sudo service ${serv} restart" \
                "Error restarting ${serv}.service" \
-               ${SERVICE_ERROR}
-echo -e "${serv}.service restarted\n"
+               ${SERVICE_ERROR} \
+               "${serv}.service restarted\n"
 
 
 echo "Goodbye..."

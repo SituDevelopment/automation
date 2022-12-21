@@ -87,19 +87,23 @@ EOF
 #######################################
 # Asserts the given command runs successfully.
 # Arguments:
-#   $1 - command to run
-#   $2 - error message to print on failure
-#   $3 - exit code to use on failure
+#   $1 - message to print before running command
+#   $2 - command to run
+#   $3 - error message to print on failure
+#   $4 - exit code to use on failure
+#   $5 - success message to print on success
 # Outputs:
 #   Writes error message to stdout
 #######################################
 assert_success() {
-    eval $1
+    echo $1
+    eval $2
     if [ $? -ne 0 ]; then
-        echo "$2"
+        echo "$3"
         echo -e "\nGoodbye..."
-        exit $3
+        exit $4
     fi
+    echo -e $5
 }
 
 
@@ -127,54 +131,56 @@ testp=${testp:="/var/www/test/${repo}"}
 prodp=${prodp:="/var/www/prod/${repo}"}
 
 
-echo "Creating repository..."
-assert_success "gh repo create '${owner}/${repo}' --description '${desc}' --${vis} --template SituDevelopment/template" \
+assert_success "Creating repository..." \
+               "gh repo create '${owner}/${repo}' --description '${desc}' --${vis} --template SituDevelopment/template" \
                "Error creating repository" \
-               ${GITHUB_ERROR}
-echo -e "Repository created\n"
+               ${GITHUB_ERROR} \
+               "Repository created\n"
 
 
-echo "Cloning production branch into '${prodp}'..."
-assert_success "git clone --branch 'prod' 'git@github.com:${owner}/${repo}' '${prodp}'" \
+assert_success "Cloning production branch into '${prodp}'..." \
+               "git clone --branch 'prod' 'git@github.com:${owner}/${repo}' '${prodp}'" \
                "Error cloning production branch" \
-               ${GITHUB_ERROR}
-echo -e "Production branch cloned\n"
+               ${GITHUB_ERROR} \
+               "Production branch cloned\n"
 
 
-echo "Marking '${prodp}' as a Git safe directory..."
-assert_success "git config --system --add safe.directory '${prodp}'" \
+assert_success "Marking '${prodp}' as a Git safe directory..." \
+               "git config --system --add safe.directory '${prodp}'" \
                "Error marking production directory as safe" \
-               ${GIT_ERROR}
-echo -e "Production directory marked safe\n"
+               ${GIT_ERROR} \
+               "Production directory marked safe\n"
 
 
-echo "Creating test branch..."
 eval "cd '${prodp}'"
-assert_success "git branch test" \
+
+
+assert_success "Creating test branch..." \
+               "git branch test" \
                "Error creating test branch" \
-               ${GIT_ERROR}
-echo -e "Test branch created\n"
+               ${GIT_ERROR} \
+               "Test branch created\n"
 
 
-echo "Pushing test branch to remote repository..."
-assert_success "git push --set-upstream origin test" \
+assert_success "Pushing test branch to remote repository..." \
+               "git push --set-upstream origin test" \
                "Error pushing test branch to remote repository" \
-               ${GITHUB_ERROR}
-echo -e "Test branch pushed to remote repository\n"
+               ${GITHUB_ERROR} \
+               "Test branch pushed to remote repository\n"
 
 
-echo "Cloning test branch into '${testp}'..."
-assert_success "git clone --branch 'test' 'git@github.com:${owner}/${repo}' '${testp}'" \
+assert_success "Cloning test branch into '${testp}'..." \
+               "git clone --branch 'test' 'git@github.com:${owner}/${repo}' '${testp}'" \
                "Error cloning test branch" \
-               ${GITHUB_ERROR}
-echo -e "Test branch cloned\n"
+               ${GITHUB_ERROR} \
+               "Test branch cloned\n"
 
 
-echo "Marking '${testp}' as a Git safe directory..."
-assert_success "git config --system --add safe.directory '${testp}'" \
+assert_success "Marking '${testp}' as a Git safe directory..." \
+               "git config --system --add safe.directory '${testp}'" \
                "Error marking test directory as safe" \
-               ${GITHUB_ERROR}
-echo -e "Test directory marked safe\n"
+               ${GITHUB_ERROR} \
+               "Test directory marked safe\n"
 
 
 echo "The 'prod' branch of ${owner}/${repo} is not protected."
