@@ -34,14 +34,18 @@
 #   0 - success
 #   1 - incorrect usage
 #   2 - GitHub error
-#   3 - service error
+#   3 - directory error
+#   4 - Python error
+#   5 - service error
 
 
 # exit codes
 SUCCESS=0
 INCORRECT_USAGE=1
 GITHUB_ERROR=2
-SERVICE_ERROR=3
+DIRECTORY_ERROR=3
+PYTHON_ERROR=4
+SERVICE_ERROR=5
 
 
 #######################################
@@ -146,11 +150,39 @@ assert_success "Merging pull request..." \
                "Pull request merged\n"
 
 
+assert_success "Entering production working directory..." \
+               "cd ${prodp}" \
+               "Error entering production working directory" \
+               ${DIRECTORY_ERROR} \
+               "Entered production working directory\n"
+
+
 assert_success "Pulling production branch to working copy..." \
-               "cd ${prodp} && git pull && cd -" \
+               "git pull" \
                "Error pulling production branch to working copy" \
                ${GITHUB_ERROR} \
                "Production branch pulled\n"
+
+
+if [ -f "venv" -a -f "requirements.txt" ]; then
+    assert_success "Activating virtual environment..." \
+                   "source ${prodp}/venv/bin/activate" \
+                   "Error activating virtual environment" \
+                   ${PYTHON_ERROR} \
+                   "Virtual environment activated\n"
+
+    assert_success "Installing requirements..." \
+                   "pip install -r requirements.txt" \
+                   "Error installing requirements" \
+                   ${PYTHON_ERROR} \
+                   "Requirements installed\n"
+
+    assert_success "Deactivating virtual environment..." \
+                     "deactivate" \
+                     "Error deactivating virtual environment" \
+                     ${PYTHON_ERROR} \
+                     "Virtual environment deactivated\n"
+fi
 
 
 assert_success "Restarting ${serv}.service..." \
