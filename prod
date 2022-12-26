@@ -36,7 +36,8 @@
 #   2 - GitHub error
 #   3 - directory error
 #   4 - Python error
-#   5 - service error
+#   5 - NPM error
+#   6 - service error
 
 
 # exit codes
@@ -45,7 +46,8 @@ INCORRECT_USAGE=1
 GITHUB_ERROR=2
 DIRECTORY_ERROR=3
 PYTHON_ERROR=4
-SERVICE_ERROR=5
+NPM_ERROR=5
+SERVICE_ERROR=6
 
 
 #######################################
@@ -178,10 +180,19 @@ if [ -f "venv" -a -f "requirements.txt" ]; then
                    "Requirements installed\n"
 
     assert_success "Deactivating virtual environment..." \
-                     "deactivate" \
-                     "Error deactivating virtual environment" \
-                     ${PYTHON_ERROR} \
-                     "Virtual environment deactivated\n"
+                   "deactivate" \
+                   "Error deactivating virtual environment" \
+                   ${PYTHON_ERROR} \
+                   "Virtual environment deactivated\n"
+fi
+
+
+if [ -f "package.json" -a -f "package-lock.json" ]; then
+    assert_success "Installing NPM dependencies..." \
+                   "npm install" \
+                   "Error installing dependencies" \
+                   ${NPM_ERROR} \
+                   "Dependencies installed\n"
 fi
 
 
