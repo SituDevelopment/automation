@@ -145,13 +145,6 @@ assert_success "Cloning production branch into '${prodp}'..." \
                "Production branch cloned\n"
 
 
-assert_success "Marking '${prodp}' as a Git safe directory..." \
-               "sudo git config --system --add safe.directory '${prodp}'" \
-               "Error marking production directory as safe" \
-               ${GIT_ERROR} \
-               "Production directory marked safe\n"
-
-
 eval "cd '${prodp}'"
 
 
@@ -174,13 +167,6 @@ assert_success "Cloning test branch into '${testp}'..." \
                "Error cloning test branch" \
                ${GITHUB_ERROR} \
                "Test branch cloned\n"
-
-
-assert_success "Marking '${testp}' as a Git safe directory..." \
-               "sudo git config --system --add safe.directory '${testp}'" \
-               "Error marking test directory as safe" \
-               ${GITHUB_ERROR} \
-               "Test directory marked safe\n"
 
 
 echo "The 'prod' branch of ${owner}/${repo} is not protected."

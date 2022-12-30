@@ -3,6 +3,10 @@
 # Runs commands which help to initialise the local environment.
 
 
+# mark the local directory as a Git safe directory
+sudo git config --system --add safe.directory .
+
+
 # if a python project with an example configuration file:
 #  - ensure a configuration file exists
 if [ -f "config.example.py" -a ! -f "config.py" ]; then
