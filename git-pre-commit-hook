@@ -3,18 +3,27 @@
 # Runs commands which help to ensure consistency across codebases.
 
 
-# if a python project with a virtual environment, update its pip requirements
+# if a python project with a virtual environment:
+#  - update its pip requirements
+#  - run the black formatter
 if [ -d "venv" ]; then
     source venv/bin/activate
     pip freeze > requirements.txt
+    black .
     deactivate
     git add requirements.txt
 fi
 
 
-# runs linters and formatters
-black .                 # .py files
-npx prettier --write .  # .css, .html, .js and .json files
+# if an NPM project with a Prettier configuration file:
+#  - run the prettier formatter
+if [ -f "package.json" -a
+        -f "package-lock.json" -a
+        -f ".prettierrc.json" -a
+        -f ".prettierignore"]; then
+    npx prettier --write .
+    npx prettier --write "**/*.html.jinja" --parser html  # format .html.jinja files as html
+fi
 
 
 # re-adds files which are already intended to be committed
