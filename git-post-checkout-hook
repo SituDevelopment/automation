@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+#
+# Runs commands which help to initialise the local environment.
+
+
+# if a python project with an example configuration file:
+#  - ensure a configuration file exists
+if [ -f "config.example.py" -a ! -f "config.py" ]; then
+    cp config.example.py config.py
+fi
+
+
+# if a python project with a pip requirements file:
+#  - update/create the virtual environment
+if [ -f "requirements.txt" ]; then
+    if [ ! -d "venv" ]; then
+        python3 -m venv venv
+    fi
+    source venv/bin/activate
+    pip install -r requirements.txt
+    deactivate
+fi
+
+
+# if an NPM project with package and package-lock files:
+#  - install the NPM dependencies
+if [ -f "package.json" -a -f "package-lock.json" ]; then
+    npm install
+fi
