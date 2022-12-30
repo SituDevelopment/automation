@@ -6,7 +6,7 @@
 # local working copy and restarts the production service.
 #
 # Usage: prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
-#             [-n <request-name> [-d <description>] [-f <directory>] [-h]
+#             [-n <request-name> [-d <description>] [-f <directory>] [-r] [-h]
 #
 # Options:
 #   -t <test-branch>      Name of the branch from which to pull changes.
@@ -26,6 +26,8 @@
 #
 #   -f <directory>        Directory into which to pull the updated production branch.
 #                         Defaults to "/var/www/prod/<service-name>".
+#
+#   -r                    Do not restart the production service.
 #
 #   -h                    Display help and exit.
 #
@@ -85,6 +87,8 @@ Options:
     -f <directory>      Directory into which to pull the updated production branch.
                         Defaults to "/var/www/prod/<service-name>".
 
+    -r                  Do not restart the production service.
+
     -h                  Display help and exit.
 EOF
 }
@@ -114,7 +118,7 @@ assert_success() {
 
 
 # assign branch and service variables according to given arguments
-while getopts ":t:p:s:n:d:f:h" flag; do
+while getopts ":t:p:s:n:d:f:rh" flag; do
     case "${flag}" in
         t) testb="${OPTARG}" ;;
         p) prod="${OPTARG}" ;;
@@ -122,6 +126,7 @@ while getopts ":t:p:s:n:d:f:h" flag; do
         n) name="${OPTARG}" ;;
         d) desc="${OPTARG}" ;;
         f) prodp="${OPTARG}" ;;
+        r) restart=0 ;;
         h) showhelp; exit ${SUCCESS} ;;
         ?) showhelp; exit ${INCORRECT_USAGE} ;;
     esac
@@ -135,6 +140,7 @@ name=${name:="Pushed to production"}
 desc=${desc:=""}
 ## service variables
 serv=${serv:="$(basename ${PWD})"}
+restart=${restart:=1}
 prodp=${prodp:="/var/www/prod/${serv}"}
 
 
@@ -196,11 +202,13 @@ if [ -f "package.json" -a -f "package-lock.json" ]; then
 fi
 
 
-assert_success "Restarting ${serv}.service..." \
-               "sudo service ${serv} restart" \
-               "Error restarting ${serv}.service" \
-               ${SERVICE_ERROR} \
-               "${serv}.service restarted\n"
+if [ ${restart} ]; then
+    assert_success "Restarting ${serv}.service..." \
+                   "sudo service ${serv} restart" \
+                   "Error restarting ${serv}.service" \
+                   ${SERVICE_ERROR} \
+                   "${serv}.service restarted\n"
+fi
 
 
 echo "Goodbye..."
