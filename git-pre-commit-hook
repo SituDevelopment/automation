@@ -17,10 +17,10 @@ fi
 
 # if an NPM project with a Prettier configuration file:
 #  - run the prettier formatter
-if [ -f "package.json" -a
-        -f "package-lock.json" -a
-        -f ".prettierrc.json" -a
-        -f ".prettierignore"]; then
+if [ -f "package.json" ] && \
+        [ -f "package-lock.json" ] && \
+        [ -f ".prettierrc.json" ] && \
+        [ -f ".prettierignore"]; then
     npx prettier --write .
     npx prettier --write "**/*.html.jinja" --parser html  # format .html.jinja files as html
 fi
