@@ -28,4 +28,6 @@ fi
 
 # re-adds files which are already intended to be committed
 # ensuring formatting changes are included in the commit
-git add `git diff --staged --name-only`
+git diff --staged --name-only | xargs -I % echo "[ -f % ] && git add %" | sh
+
+exit 0
