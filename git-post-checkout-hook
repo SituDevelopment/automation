@@ -7,46 +7,6 @@
 # across all developers working on all projects.
 
 
-#######################################
-# Determines the existence of files
-# with the given extension(s).
-# Arguments:
-#   $1 - extension to search for
-#   ...
-# Outputs:
-#   Names of files with the given
-#     extension(s)
-# Returns:
-#   0 if any files with the given
-#     extension(s) exist
-#   1 otherwise
-#######################################
-function find_by_extension() {
-    to_ignore=("node_modules" "venv" "build" "dist" ".github" ".vscode")
-    max=${#to_ignore[@]}
-    index=1
-    prefix="-path '${to_ignore[0]}' -prune"
-
-    while [ ${index} -lt ${max} ]; do
-        prefix="${prefix} -o -path '${to_ignore[${index}]}' -prune"
-        index=$((index + 1))
-    done
-
-    max=$#
-    index=2
-    options="-name '$1'"
-    shift 1
-
-    while [ ${index} -le ${max} ]; do
-        options="${options} -o -name '$1'"
-        index=$((index + 1))
-        shift 1
-    done
-    
-    eval "find . \( ${prefix} \) -o \( ${options} \) | grep \"\""
-}
-
-
 echo "Marking repository as Git safe..."
 sudo git config --system --add safe.directory . > /dev/null
 
