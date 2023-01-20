@@ -1,33 +1,109 @@
 #!/usr/bin/bash
 #
-# Runs commands which help to ensure consistency across codebases.
+# Runs commands which ensure the required formatters are installed and that the
+# required files are formatted before committing.
+#
+# These commands help to ensure that the codebase is formatted consistently across
+# projects, regarless of the developer or their development environment.
 
 
-# if a python project with a virtual environment:
-#  - update its pip requirements
-#  - run the black formatter
-if [ -d "venv" ]; then
-    source venv/bin/activate
+#######################################
+# Determines the existence of files
+# with the given extension(s).
+# Arguments:
+#   $1 - extension to search for
+#   ...
+# Outputs:
+#   Names of files with the given
+#     extension(s)
+# Returns:
+#   0 if any files with the given
+#     extension(s) exist
+#   1 otherwise
+#######################################
+function find_by_extension() {
+    max=$#
+    index=2
+    options="-name '$1'"
+    shift 1
+
+    while [ ${index} -le ${max} ]; do
+        options="${options} -o -name '$1'"
+        index=$((index + 1))
+        shift 1
+    done
+    
+    eval "find . \( -path ./venv -prune -o -path ./node_modules -prune \) -o \( ${options} \) | grep \"\""
+}
+
+
+status=0
+
+find_by_extension "*.py" > /dev/null
+if [ $? -eq 0 ]; then
+    echo "Found Python!"
+
+    if [ -f "config.py" -a ! -f "config.example.py" ]; then
+        cp config.py config.example.py > /dev/null
+        git add config.example.py > /dev/null
+        echo "Please edit \`config.example.py\` to ensure that it does not contain any sensitive information."
+
+        status=1
+    fi
+
+    if [ ! -d "venv" ]; then
+        echo "Creating virtual environment..."
+        python3 -m venv venv > /dev/null
+    fi
+
+    source venv/bin/activate > /dev/null
+
+    echo "Formatting Python files..."
+    pip install black > /dev/null
+    black . > /dev/null
+
+    echo "Ensuring Pip requirements are up to date..."
     pip freeze > requirements.txt
-    black .
-    deactivate
-    git add requirements.txt
+    git add requirements.txt > /dev/null
+
+    deactivate > /dev/null
 fi
 
 
-# if an NPM project with a Prettier configuration file:
-#  - run the prettier formatter
-if [ -f "package.json" ] && \
-        [ -f "package-lock.json" ] && \
-        [ -f ".prettierrc.json" ] && \
-        [ -f ".prettierignore"]; then
-    npx prettier --write .
-    npx prettier --write "**/*.html.jinja" --parser html  # format .html.jinja files as html
+find_by_extension "*.html" "*.html.jinja" "*.css" "*.js" > /dev/null
+if [ $? -eq 0 ]; then
+    echo "Found web stuff!"
+
+    if [ ! -f "package.json" ]; then
+        echo "Initializing npm project..."
+        npm init -y > /dev/null
+    fi
+
+    echo "Ensuring updated depencencies (including Prettier) are installed..."
+    npm install > /dev/null
+    npm install prettier --save-dev > /dev/null
+    git add package.json > /dev/null
+
+    echo "Ensuring Prettier configuration files are present..."
+    if [ ! -f ".prettierrc.json" ]; then
+        cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
+        git add .prettierrc.json > /dev/null
+    fi
+    if [ ! -f ".prettierignore" ]; then
+        cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
+        git add .prettierignore > /dev/null
+    fi
+
+    echo "Formatting web files..."
+    npx prettier --write . > /dev/null
+
+    jinja=$(find_by_extension "*.html.jinja")
+    if [ $? -eq 0 ]; then
+        npx prettier --write --parser html "${jinja}" > /dev/null
+    fi
 fi
 
 
-# re-adds files which are already intended to be committed
-# ensuring formatting changes are included in the commit
-git diff --staged --name-only | xargs -I % echo "[ -f % ] && git add %" | sh
+git diff --staged --name-only | xargs -I % echo "[ -f % ] && git add %" | sh > /dev/null
 
-exit 0
+exit ${status}

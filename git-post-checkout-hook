@@ -1,33 +1,96 @@
 #!/usr/bin/bash
 #
-# Runs commands which help to initialise the local environment.
+# Runs commands which initialise the local development environment after checking out a
+# Git repository.
+#
+# These commands help to ensure that the local development environment is consistent
+# across all developers working on all projects.
 
 
-# mark the local directory as a Git safe directory
-sudo git config --system --add safe.directory .
+#######################################
+# Determines the existence of files
+# with the given extension(s).
+# Arguments:
+#   $1 - extension to search for
+#   ...
+# Outputs:
+#   Names of files with the given
+#     extension(s)
+# Returns:
+#   0 if any files with the given
+#     extension(s) exist
+#   1 otherwise
+#######################################
+function find_by_extension() {
+    max=$#
+    index=2
+    options="-name '$1'"
+    shift 1
+
+    while [ ${index} -le ${max} ]; do
+        options="${options} -o -name '$1'"
+        index=$((index + 1))
+        shift 1
+    done
+    
+    eval "find . \( -path ./venv -prune -o -path ./node_modules -prune \) -o \( ${options} \) | grep \"\""
+}
 
 
-# if a python project with an example configuration file:
-#  - ensure a configuration file exists
-if [ -f "config.example.py" -a ! -f "config.py" ]; then
-    cp config.example.py config.py
-fi
+echo "Marking repository as Git safe..."
+sudo git config --system --add safe.directory . > /dev/null
 
 
-# if a python project with a pip requirements file:
-#  - update/create the virtual environment
-if [ -f "requirements.txt" ]; then
-    if [ ! -d "venv" ]; then
-        python3 -m venv venv
+find_by_extension "*.py" > /dev/null
+if [ $? -e 0 ]; then
+    echo "Found Python!"
+
+    if [ -f "config.example.py" -a ! -f "config.py" ]; then
+        cp config.example.py config.py > /dev/null
+        echo "Please edit `config.py` to ensure that it contains the required configuration variables."
     fi
-    source venv/bin/activate
-    pip install -r requirements.txt
-    deactivate
+
+    if [ ! -d "venv" ]; then
+        echo "Creating virtual environment..."
+        python3 -m venv venv > /dev/null
+    fi
+
+    source venv/bin/activate > /dev/null
+
+    echo "Ensuring updated depencencies (including Black) are installed..."
+    if [ -f "requirements.txt" ]; then
+        pip install -r requirements.txt > /dev/null
+    fi
+
+    echo "Ensuring Pip requirements are up to date..."
+    pip install black > /dev/null
+    pip freeze > requirements.txt
+
+    deactivate > /dev/null
 fi
 
 
-# if an NPM project with package and package-lock files:
-#  - install the NPM dependencies
-if [ -f "package.json" -a -f "package-lock.json" ]; then
-    npm install
+find_by_extension "*.html" "*.html/jinja" "*.css" "*.js" > /dev/null
+if [ $? -eq 0 ]; then
+    echo "Found web stuff!"
+
+    if [ ! -f "package.json" ]; then
+        echo "Initializing npm project..."
+        npm init -y > /dev/null
+        git add package.json package-lock.json > /dev/null
+    fi
+
+    echo "Ensuring updated depencencies (including Prettier) are installed..."
+    npm install > /dev/null
+    npm install prettier --save-dev > /dev/null
+
+    echo "Ensuring Prettier configuration files are present..."
+    if [ ! -f ".prettierrc.json" ]; then
+        cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
+        git add .prettierrc.json > /dev/null
+    fi
+    if [ ! -f ".prettierignore" ]; then
+        cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
+        git add .prettierignore > /dev/null
+    fi
 fi
