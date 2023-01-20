@@ -22,6 +22,16 @@
 #   1 otherwise
 #######################################
 function find_by_extension() {
+    to_ignore=("node_modules" "venv" "build" "dist" ".github" ".vscode")
+    max=${#to_ignore[@]}
+    index=1
+    prefix="-path '${to_ignore[0]}' -prune"
+
+    while [ ${index} -lt ${max} ]; do
+        prefix="${prefix} -o -path '${to_ignore[${index}]}' -prune"
+        index=$((index + 1))
+    done
+
     max=$#
     index=2
     options="-name '$1'"
@@ -33,7 +43,7 @@ function find_by_extension() {
         shift 1
     done
     
-    eval "find . \( -path ./venv -prune -o -path ./node_modules -prune \) -o \( ${options} \) | grep \"\""
+    eval "find . \( ${prefix} \) -o \( ${options} \) | grep \"\""
 }
 
 
