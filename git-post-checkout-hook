@@ -12,7 +12,7 @@ sudo git config --system --add safe.directory . > /dev/null
 
 
 find_by_extension "*.py" > /dev/null
-if [ $? -e 0 ]; then
+if [ $? -eq 0 ]; then
     echo "Found Python!"
 
     if [ -f "config.example.py" -a ! -f "config.py" ]; then
