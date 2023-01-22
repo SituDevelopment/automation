@@ -17,7 +17,7 @@ if [ $? -eq 0 ]; then
 
     if [ -f "config.example.py" -a ! -f "config.py" ]; then
         cp config.example.py config.py > /dev/null
-        echo "Please edit `config.py` to ensure that it contains the required configuration variables."
+        echo "Please edit \`config.py\` to ensure that it contains the required configuration variables."
     fi
 
     if [ ! -d "venv" ]; then
