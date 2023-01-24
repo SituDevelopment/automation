@@ -4,7 +4,8 @@
 github \- create a new github repository
 
 .SH SYNOPSIS
-github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>] [-t <test-directory>] [-p <prod-directory>] [-h]
+github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>] [-t <test-directory>] [-p <prod-directory>]
+github -h
 
 .SH DESCRIPTION
 Creates a new GitHub repository with test and production branches and clones the branches locally.
