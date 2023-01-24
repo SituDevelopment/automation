@@ -1,0 +1,146 @@
+#!/usr/bin/bash
+#
+#
+# Creates a new Git feature branch in the given repository and publishes it to GitHub.
+#
+#
+# Usage:
+#   feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+#   feature-branch -h
+#
+# Options:
+#   -o <owner>            Owner of the repository.
+#                         Defaults to "SituDevelopment".
+#
+#   -b <base-branch>      Name of the branch from which to take the feature branch.
+#                         Defaults to "test".
+#
+#   <repository>          Name of the repository.
+#
+#   <feature-branch>      Name of the feature branch to create.
+#
+#   -h                    Display help and exit.
+#
+#
+# Exit codes:
+#   0 - success
+#   1 - incorrect usage
+#   2 - git error
+
+
+# exit codes
+SUCCESS=0
+INCORRECT_USAGE=1
+GIT_ERROR=2
+
+
+#######################################
+# Display help message.
+# Arguments:
+#   None
+# Outputs:
+#   Writes help message to stdout
+#######################################
+showhelp() {
+cat << EOF
+Usage:
+  feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+  feature-branch -h
+
+Creates a new Git feature branch in the given repository and publishes it to GitHub.
+
+
+Options:
+  -o <owner>            Owner of the repository.
+                        Defaults to "SituDevelopment".
+
+  -b <base-branch>      Name of the branch from which to take the feature branch.
+                        Defaults to "test".
+
+  <repository>          Name of the repository.
+
+  <feature-branch>      Name of the feature branch to create.
+
+  -h                    Display help and exit.
+EOF
+}
+
+
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - message to print before running command
+#   $2 - command to run
+#   $3 - error message to print on failure
+#   $4 - exit code to use on failure
+#   $5 - success message to print on success
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    echo $1
+    eval $2
+    if [ $? -ne 0 ]; then
+        echo "$3"
+        echo -e "\nGoodbye..."
+        exit $4
+    fi
+    echo -e $5
+}
+
+
+# assign repository and branch variables according to given arguments
+while getopts ":o:b:h" flag; do
+    case "${flag}" in
+        o) owner="${OPTARG}" ;;
+        b) base="${OPTARG}" ;;
+        h) showhelp; exit ${SUCCESS} ;;
+        ?) showhelp; exit ${INCORRECT_USAGE} ;;
+    esac
+done
+
+# set default values for unset variables
+owner=${owner:="SituDevelopment"}
+base=${base:="test"}
+
+shift $((${OPTIND} - 1))
+if [ $# -ne 2 ]; then
+    showhelp
+    exit ${INCORRECT_USAGE}
+fi
+
+repo=$1
+feature=$2
+
+assert_success "Cloning base branch of repository..." \
+               "git clone git@github.com:${owner}/${repo} --branch '${base}' '/var/www/features/${repo}-${feature}'" \
+               "Error cloning repository" \
+               ${GIT_ERROR} \
+               "Cloned base branch of repository\n"
+
+
+eval "cd '/var/www/features/${repo}-${feature}'"
+
+
+assert_success "Creating feature branch..." \
+               "git branch '${feature}'" \
+               "Error creating feature branch" \
+               ${GIT_ERROR} \
+               "Created feature branch\n"
+
+
+assert_success "Publishing feature branch to remote repository..." \
+               "git push --set-upstream origin '${feature}'" \
+               "Error publishing feature branch to remote repository" \
+               ${GIT_ERROR} \
+               "Published feature branch to remote repository\n"
+
+
+assert_success "Checking out to feature branch..." \
+               "git checkout '${feature}'" \
+               "Error checking out to feature branch" \
+               ${GIT_ERROR} \
+               "Checked out feature branch\n"
+
+
+exit ${SUCCESS}
