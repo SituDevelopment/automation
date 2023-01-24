@@ -1,0 +1,37 @@
+.TH FEATURE-BRANCH 1 "January 2023" "1.0" "Automation Manual"
+
+.SH NAME
+feature-branch \- create a new feature branch
+
+.SH SYNOPSIS
+feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+
+feature-branch -h
+
+.SH DESCRIPTION
+Creates a new Git feature branch in the given repository and publishes it to GitHub.
+
+.SH OPTIONS
+.TP
+-o <owner>
+Owner of the repository. Defaults to "SituDevelopment".
+
+.TP
+-b <base-branch>
+Name of the branch from which to take the feature branch. Defaults to "test".
+
+.TP
+<repository>
+Name of the repository.
+
+.TP
+<feature-branch>
+Name of the feature branch to create.
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)
+ 
