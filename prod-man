@@ -5,7 +5,8 @@ prod \- push a test branch to production
 
 .SH SYNOPSIS
 prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
-     [-n <request-name>] [-d <description>] [-f <directory>] [-h]
+     [-n <request-name>] [-d <description>] [-f <directory>]
+prod -h
 
 .SH DESCRIPTION
 Pushes the contents of the test branch to the production branch of the

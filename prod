@@ -5,8 +5,10 @@
 # repository cloned into the current working directory, pulls the changes to the
 # local working copy and restarts the production service.
 #
-# Usage: prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
-#             [-n <request-name> [-d <description>] [-f <directory>] [-r] [-h]
+# Usage:
+#   prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
+#        [-n <request-name> [-d <description>] [-f <directory>] [-r]
+#   prod -h
 #
 # Options:
 #   -t <test-branch>      Name of the branch from which to pull changes.
@@ -61,8 +63,10 @@ SERVICE_ERROR=6
 #######################################
 showhelp() {
 cat << EOF
-Usage: prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
-            [-n <request-name>] [-d <description>] [-f <directory>] [-h]
+Usage:
+  prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>]
+       [-n <request-name>] [-d <description>] [-f <directory>]
+  prod -h
 
 Pushes the contents of the test branch to the production branch of the
 repository cloned into the current working directory, pulls the changes to the

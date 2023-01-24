@@ -7,8 +7,10 @@
 # See /usr/bin/prod.sh
 #
 #
-# Usage: github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>]
-#               [-t <test-directory>] [-p <prod-directory>] [-h]
+# Usage:
+#   github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>]
+#          [-t <test-directory>] [-p <prod-directory>]
+#   github -h
 #
 # Options:
 #   -o <owner>            Owner of the repository.
@@ -55,8 +57,10 @@ GIT_ERROR=3
 #######################################
 showhelp() {
 cat << EOF
-Usage: github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>]
-              [-t <test-directory>] [-p <prod-directory>] [-h]
+Usage:
+  github [-o <owner>] [-r <repository>] [-d <description>] [-v <visibility>]
+         [-t <test-directory>] [-p <prod-directory>]
+  github -h
 
 Creates a new GitHub repository with test and production branches.
 
