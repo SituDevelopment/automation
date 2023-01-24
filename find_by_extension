@@ -36,4 +36,4 @@ while [ ${index} -le ${max} ]; do
     shift 1
 done
 
-eval "find . \( ${prefix} \) -o \( ${options} \) | grep \"\""
+eval "find . \( ${prefix} \) -a \( ${options} \) | grep \"\""
