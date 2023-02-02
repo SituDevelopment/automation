@@ -18,7 +18,7 @@
 #
 #   -r <repository>       Name of the repository.
 #                         Defaults to the name of the curent working directory.
-#  
+#
 #   -d <description>      Description of the repository.
 #                         Defaults to the empty string.
 #
@@ -70,7 +70,7 @@ Options:
 
   -r <repository>       Name of the repository.
                         Defaults to the name of the curent working directory.
-  
+
   -d <description>      Description of the repository.
                         Defaults to the empty string.
 
