@@ -2,6 +2,7 @@
 #
 #
 # Creates a new Git feature branch in the given repository and publishes it to GitHub.
+# If the VS Code command: `code` is available, the project will be opened in VS Code.
 #
 #
 # Usage:
@@ -26,12 +27,14 @@
 #   0 - success
 #   1 - incorrect usage
 #   2 - git error
+#   3 - VS Code error
 
 
 # exit codes
 SUCCESS=0
 INCORRECT_USAGE=1
 GIT_ERROR=2
+VS_CODE_ERROR=3
 
 
 #######################################
@@ -141,6 +144,20 @@ assert_success "Checking out to feature branch..." \
                "Error checking out to feature branch" \
                ${GIT_ERROR} \
                "Checked out feature branch\n"
+
+
+assert_success "Checking for VS Code command..." \
+               "which code" \
+               "VS Code command not found" \
+               ${SUCCESS} \
+               "VS Code command found\n"
+
+
+assert_success "Opening project in VS Code..." \
+               "code '/var/www/features/${repo}-${feature}'" \
+               "Error opening project in VS Code" \
+               ${VS_CODE_ERROR} \
+               "Opened project in VS Code\n"
 
 
 exit ${SUCCESS}
