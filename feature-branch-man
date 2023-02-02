@@ -1,4 +1,4 @@
-.TH FEATURE-BRANCH 1 "January 2023" "1.0" "Automation Manual"
+.TH FEATURE-BRANCH 1 "February 2023" "1.0" "Automation Manual"
 
 .SH NAME
 feature-branch \- create a new feature branch
@@ -10,6 +10,8 @@ feature-branch -h
 
 .SH DESCRIPTION
 Creates a new Git feature branch in the given repository and publishes it to GitHub.
+
+If the VS Code command: `code` is available, the project will be opened in VS Code.
 
 .SH OPTIONS
 .TP
