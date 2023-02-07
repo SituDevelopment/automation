@@ -8,7 +8,7 @@
 
 
 echo "Marking repository as Git safe..."
-sudo git config --system --add safe.directory . > /dev/null
+sudo git config --system --add safe.directory `pwd` > /dev/null
 
 
 find_by_extension "*.py" > /dev/null
