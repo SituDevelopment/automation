@@ -18,10 +18,10 @@ to_ignore=("node_modules" "venv" "build" "dist" ".github" ".vscode")
 
 max=${#to_ignore[@]}
 index=1
-prefix="-path '${to_ignore[0]}' -prune"
+prefix="-name '${to_ignore[0]}' -prune"
 
 while [ ${index} -lt ${max} ]; do
-    prefix="${prefix} -o -path '${to_ignore[${index}]}' -prune"
+    prefix="${prefix} -o -name '${to_ignore[${index}]}' -prune"
     index=$((index + 1))
 done
 
