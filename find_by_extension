@@ -27,13 +27,13 @@ done
 
 max=$#
 index=2
-options="-name '$1'"
+options="-e '$1\$'"
 shift 1
 
 while [ ${index} -le ${max} ]; do
-    options="${options} -o -name '$1'"
+    options="${options} -e '$1\$'"
     index=$((index + 1))
     shift 1
 done
 
-eval "find . \( ${prefix} \) -a \( ${options} \) | grep \"\""
+eval "find . ${prefix} -o -print | grep ${options}"
