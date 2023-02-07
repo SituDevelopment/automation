@@ -1,0 +1,28 @@
+.TH PROD 1 "February 2023" "1.0" "Automation Manual"
+
+.SH NAME
+clone-mongo-db \- clone a MongoDB Database
+
+.SH SYNOPSIS
+clone-mongo-db <db-name> <clone-name>
+
+clone-mongo-db -h
+
+.SH DESCRIPTION
+Clones a MongoDB Database.
+
+.SH OPTIONS
+.TP
+<db-name>
+Name of the database to clone.
+
+.TP
+<clone-name>
+Name of the clone database.
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+Cameron Jensen (cameron@situ.com.au)

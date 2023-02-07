@@ -1,0 +1,99 @@
+#!/usr/bin/bash
+#
+#
+# Clones a MongoDB Database.
+#
+# Usage:
+#   clone-mongo-db <db-name> <clone-name>
+#   clone-mongo-db -h
+#
+# Arguments:
+#   <db-name>         Name of the database to clone.
+#   
+#   <clone-name>      Name of the clone database.
+#
+# Options:
+#   -h                Display help and exit.
+#
+#
+# Exit codes:
+#   0 - success
+#   1 - incorrect usage
+#   2 - MongoDB error
+
+
+# exit codes
+SUCCESS=0
+INCORRECT_USAGE=1
+MONGO_ERROR=2
+
+#######################################
+# Display help message.
+# Arguments:
+#   None
+# Outputs:
+#   Writes help message to stdout
+#######################################
+showhelp() {
+cat << EOF
+Usage:
+    clone-mongo-db <db-name> <clone-name>
+    clone-mongo-db -h
+
+Clones a MongoDB Database.
+
+Arguments:
+    <db-name>       Name of the database to clone.
+    
+    <clone-name>    Name of the clone database.
+
+Options:
+    -h              Display help and exit.
+EOF
+}
+
+
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - message to print before running command
+#   $2 - command to run
+#   $3 - error message to print on failure
+#   $4 - exit code to use on failure
+#   $5 - success message to print on success
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    echo $1
+    eval $2
+    if [ $? -ne 0 ]; then
+        echo "$3"
+        echo -e "\nGoodbye..."
+        exit $4
+    fi
+    echo -e $5
+}
+
+while getopts "h" flag; do
+    case "${flag}" in
+        h) showhelp; exit ${SUCCESS} ;;
+        ?) showhelp; exit ${INCORRECT_USAGE} ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Ensure that 2 arguments are given
+if [ $# -ne 2 ]; then
+    exit ${INCORRECT_USAGE}
+fi
+
+# Assign MONGO_PASS and MONGO_USER environment variables
+[[ -z "${MONGO_USER}" ]] && read -p "Enter MongoDB username: " MONGO_USER
+[[ -z "${MONGO_PASS}" ]] && read -p "Enter MongoDB password: " MONGO_PASS
+
+assert_success "Cloning database $1 to $2..." \
+    "mongodump --archive --authenticationDatabase=admin --db=$1 --authenticationMechanism=SCRAM-SHA-256 --username='${MONGO_USER}' --password='${MONGO_PASS}' | mongorestore --archive --authenticationDatabase=admin --nsFrom='$1.*' --nsTo='$2.*' --authenticationMechanism=SCRAM-SHA-256 --username='${MONGO_USER}' --password='${MONGO_PASS}'" \
+    "Failed to clone database $1 to $2." \
+    ${MONGO_ERROR} \
+    "Successfully cloned database $1 to $2."
