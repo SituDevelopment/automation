@@ -1,0 +1,28 @@
+.TH PROD 1 "February 2023" "1.0" "Automation Manual"
+
+.SH NAME
+create-pr \- create a GitHub pull request
+
+.SH SYNOPSIS
+create-pr <base-branch> <label> [<label> ...]
+
+create-pr -h
+
+.SH DESCRIPTION
+Creates a GitHub pull request with the given properties.
+
+.SH OPTIONS
+.TP
+<base-branch>
+Name of the branch from which to pull changes.
+
+.TP
+<label>
+Label to add to the pull request.
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)
