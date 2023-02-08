@@ -27,7 +27,6 @@ SUCCESS=0
 INCORRECT_USAGE=1
 GITHUB_ERROR=2
 
-
 #######################################
 # Display help message.
 # Arguments:
@@ -36,6 +35,12 @@ GITHUB_ERROR=2
 #   Writes help message to stdout
 #######################################
 showhelp() {
+# Get list of labels for the current repository
+labels=$(gh label list --json name -t '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2>/dev/null)
+if [ -n "$labels" ]; then
+    labels=$'Available labels:\n'$labels
+fi
+
 cat << EOF
 Usage:
   create-pr <base-branch> <label> [<label> ...]
@@ -47,7 +52,7 @@ Arguments:
     <base-branch>   Name of the branch from which to pull changes.
 
     <label>         Label to add to the pull request.
-
+                        $labels
 Options:
     -h              Display help and exit.
 EOF
