@@ -53,6 +53,7 @@ Arguments:
 
     <label>         Label to add to the pull request.
                     ${labels}
+
 Options:
     -h              Display help and exit.
 EOF
