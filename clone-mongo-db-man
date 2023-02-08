@@ -9,7 +9,7 @@ clone-mongo-db <db-name> <clone-name>
 clone-mongo-db -h
 
 .SH DESCRIPTION
-Clones a MongoDB Database.
+Clones a MongoDB database.
 
 .SH OPTIONS
 .TP

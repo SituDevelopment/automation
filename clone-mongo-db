@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #
 #
-# Clones a MongoDB Database.
+# Clones a MongoDB database.
 #
 # Usage:
 #   clone-mongo-db <db-name> <clone-name>
@@ -40,7 +40,7 @@ Usage:
     clone-mongo-db <db-name> <clone-name>
     clone-mongo-db -h
 
-Clones a MongoDB Database.
+Clones a MongoDB database.
 
 Arguments:
     <db-name>       Name of the database to clone.
