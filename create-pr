@@ -52,7 +52,7 @@ Arguments:
     <base-branch>   Name of the branch from which to pull changes.
 
     <label>         Label to add to the pull request.
-                        ${labels}
+                    ${labels}
 Options:
     -h              Display help and exit.
 EOF
