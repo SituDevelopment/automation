@@ -1,7 +1,7 @@
 .TH PROD 1 "February 2023" "1.0" "Automation Manual"
 
 .SH NAME
-clone-mongo-db \- clone a MongoDB Database
+clone-mongo-db \- clone a MongoDB database
 
 .SH SYNOPSIS
 clone-mongo-db <db-name> <clone-name>
