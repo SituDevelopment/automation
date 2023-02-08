@@ -4,7 +4,8 @@ Tools and configurations for automating processes and ensuring consistency acros
 codebases and working directories.
 
 ## Tools
-
+- `clone-mongo-db`
+  - Clones a MongoDB database.
 - `create-pr`
   - Creates a GitHub pull request with the given properties.
 - `feature-branch`
