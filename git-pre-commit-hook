@@ -9,7 +9,7 @@
 
 status=0
 
-find_by_extension "*.py" > /dev/null
+find-by-extension "*.py" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found Python!"
 
@@ -40,7 +40,7 @@ if [ $? -eq 0 ]; then
 fi
 
 
-find_by_extension "*.html" "*.html.jinja" "*.css" ".*json" "*.js" "*.ts" "*.jsx" "*.tsx" "*.cjs" > /dev/null
+find-by-extension "*.html" "*.html.jinja" "*.css" ".*json" "*.js" "*.ts" "*.jsx" "*.tsx" "*.cjs" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found web stuff!"
 
@@ -67,7 +67,7 @@ if [ $? -eq 0 ]; then
     echo "Formatting web files..."
     npx prettier --write . > /dev/null
 
-    jinja=$(find_by_extension "*.html.jinja")
+    jinja=$(find-by-extension "*.html.jinja")
     if [ $? -eq 0 ]; then
         npx prettier --write --parser html "${jinja}" > /dev/null
     fi

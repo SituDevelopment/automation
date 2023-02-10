@@ -1,0 +1,25 @@
+.TH FIND-BY-EXTENSION 1 "February 2023" "1.0" "Automation Manual"
+
+.SH NAME
+find-by-extension \- find and echo files with the given extensions
+
+.SH SYNOPSIS
+find-by-extension <extension> [<extension> ...]
+
+find-by-extension -h
+
+.SH DESCRIPTION
+Determines the existence and echoes the names of files with the given file extension(s).
+
+.SH ARGUMENTS
+.TP
+<extension>
+Extension to find by.
+
+.SH OPTIONS
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)
