@@ -17,6 +17,12 @@
             "options": {
                 "printWidth": 120
             }
+        },
+        {
+            "files": "**/*.html.jinja",
+            "options": {
+                "parser": "html"
+            }
         }
     ]
 }
