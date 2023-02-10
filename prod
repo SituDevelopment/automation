@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #
 #
-# Rebases the contents of the test branch onto the production branch of the
+# Pushes the contents of the test branch to the production branch of the
 # repository cloned into the current working directory, pulls the changes to the
 # local working copy and restarts the production service.
 #
@@ -155,11 +155,11 @@ assert_success "Creating pull request..." \
                "Pull request created\n"
 
 
-assert_success "Rebasing pull request..." \
-               "gh pr merge ${testb} --rebase" \
-               "Error rebasing pull request" \
+assert_success "Merging pull request..." \
+               "gh pr merge ${testb} --merge" \
+               "Error merging pull request" \
                ${GITHUB_ERROR} \
-               "Pull request rebased\n"
+               "Pull request merged\n"
 
 
 assert_success "Entering production working directory..." \
