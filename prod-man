@@ -9,7 +9,7 @@ prod [-t <test-branch>] [-p <prod-branch>] [-s <service-name>] [-n <request-name
 prod -h
 
 .SH DESCRIPTION
-Rebases the contents of the test branch onto the production branch of the
+Pushes the contents of the test branch to the production branch of the
 repository cloned into the current working directory, pulls the changes to the
 local working copy and restarts the production service.
 
