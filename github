@@ -88,29 +88,6 @@ EOF
 }
 
 
-#######################################
-# Asserts the given command runs successfully.
-# Arguments:
-#   $1 - message to print before running command
-#   $2 - command to run
-#   $3 - error message to print on failure
-#   $4 - exit code to use on failure
-#   $5 - success message to print on success
-# Outputs:
-#   Writes error message to stdout
-#######################################
-assert_success() {
-    echo $1
-    eval $2
-    if [ $? -ne 0 ]; then
-        echo "$3"
-        echo -e "\nGoodbye..."
-        exit $4
-    fi
-    echo -e $5
-}
-
-
 # assign repository and branch variables according to given arguments
 while getopts ":o:r:d:v:t:p:h" flag; do
     case "${flag}" in
