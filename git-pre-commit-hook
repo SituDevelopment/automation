@@ -66,11 +66,6 @@ if [ $? -eq 0 ]; then
 
     echo "Formatting web files..."
     npx prettier --write . > /dev/null
-
-    jinja=$(find-by-extension "*.html.jinja")
-    if [ $? -eq 0 ]; then
-        npx prettier --write --parser html "${jinja}" > /dev/null
-    fi
 fi
 
 
