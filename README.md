@@ -4,23 +4,20 @@ Tools and configurations for automating processes and ensuring consistency acros
 codebases and working directories.
 
 ## Tools
-
--   `assert-success`
-    -   Asserts a given command runs successfully.
--   `clone-mongo-db`
-    -   Clones a MongoDB database.
--   `create-pr`
-    -   Creates a GitHub pull request with the given properties.
--   `feature-branch`
-    -   Creates a new Git feature branch in the given repository and publishes it to GitHub.
--   `find-by-extension`
-    -   Determines the existence and echoes the names of files with the given file extension(s).
--   `github`
-    -   Creates a new GitHub repository with test and production branches.
--   `prod`
-    -   Pushes the local test branch to production.
+- `clone-mongo-db`
+  - Clones a MongoDB database.
+- `create-pr`
+  - Creates a GitHub pull request with the given properties.
+- `feature-branch`
+  - Creates a new Git feature branch in the given repository and publishes it to GitHub.
+- `find-by-extension`
+  - Determines the existence and echoes the names of files with the given file extension(s).
+- `github`
+  - Creates a new GitHub repository with test and production branches.
+- `prod`
+  - Pushes the local test branch to production.
 
 ## Configurations
 
--   `docstring-template.mustache`
-    -   Templates Python docstrings.
+- `docstring-template.mustache`
+  - Templates Python docstrings.
