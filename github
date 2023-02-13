@@ -112,14 +112,14 @@ testp=${testp:="/var/www/test/${repo}"}
 prodp=${prodp:="/var/www/prod/${repo}"}
 
 
-assert_success "Creating repository..." \
+assert-success "Creating repository..." \
                "gh repo create '${owner}/${repo}' --description '${desc}' --${vis} --template SituDevelopment/template" \
                "Error creating repository" \
                ${GITHUB_ERROR} \
                "Repository created\n"
 
 
-assert_success "Cloning production branch into '${prodp}'..." \
+assert-success "Cloning production branch into '${prodp}'..." \
                "git clone --branch 'prod' 'git@github.com:${owner}/${repo}' '${prodp}'" \
                "Error cloning production branch" \
                ${GITHUB_ERROR} \
@@ -129,21 +129,21 @@ assert_success "Cloning production branch into '${prodp}'..." \
 eval "cd '${prodp}'"
 
 
-assert_success "Creating test branch..." \
+assert-success "Creating test branch..." \
                "git branch test" \
                "Error creating test branch" \
                ${GIT_ERROR} \
                "Test branch created\n"
 
 
-assert_success "Pushing test branch to remote repository..." \
+assert-success "Pushing test branch to remote repository..." \
                "git push --set-upstream origin test" \
                "Error pushing test branch to remote repository" \
                ${GITHUB_ERROR} \
                "Test branch pushed to remote repository\n"
 
 
-assert_success "Cloning test branch into '${testp}'..." \
+assert-success "Cloning test branch into '${testp}'..." \
                "git clone --branch 'test' 'git@github.com:${owner}/${repo}' '${testp}'" \
                "Error cloning test branch" \
                ${GITHUB_ERROR} \

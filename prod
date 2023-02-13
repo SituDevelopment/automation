@@ -125,28 +125,28 @@ restart=${restart:=1}
 prodp=${prodp:="/var/www/prod/${serv}"}
 
 
-assert_success "Creating pull request..." \
+assert-success "Creating pull request..." \
                "gh pr create --base '${prod}' --head '${testb}' --title '${name}' --body '${desc}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
 
 
-assert_success "Merging pull request..." \
+assert-success "Merging pull request..." \
                "gh pr merge ${testb} --merge" \
                "Error merging pull request" \
                ${GITHUB_ERROR} \
                "Pull request merged\n"
 
 
-assert_success "Entering production working directory..." \
+assert-success "Entering production working directory..." \
                "cd ${prodp}" \
                "Error entering production working directory" \
                ${DIRECTORY_ERROR} \
                "Entered production working directory\n"
 
 
-assert_success "Pulling production branch to working copy..." \
+assert-success "Pulling production branch to working copy..." \
                "git pull" \
                "Error pulling production branch to working copy" \
                ${GITHUB_ERROR} \
@@ -154,19 +154,19 @@ assert_success "Pulling production branch to working copy..." \
 
 
 if [ -f "venv" -a -f "requirements.txt" ]; then
-    assert_success "Activating virtual environment..." \
+    assert-success "Activating virtual environment..." \
                    "source ${prodp}/venv/bin/activate" \
                    "Error activating virtual environment" \
                    ${PYTHON_ERROR} \
                    "Virtual environment activated\n"
 
-    assert_success "Installing requirements..." \
+    assert-success "Installing requirements..." \
                    "pip install -r requirements.txt" \
                    "Error installing requirements" \
                    ${PYTHON_ERROR} \
                    "Requirements installed\n"
 
-    assert_success "Deactivating virtual environment..." \
+    assert-success "Deactivating virtual environment..." \
                    "deactivate" \
                    "Error deactivating virtual environment" \
                    ${PYTHON_ERROR} \
@@ -175,7 +175,7 @@ fi
 
 
 if [ -f "package.json" -a -f "package-lock.json" ]; then
-    assert_success "Installing NPM dependencies..." \
+    assert-success "Installing NPM dependencies..." \
                    "npm install" \
                    "Error installing dependencies" \
                    ${NPM_ERROR} \
@@ -184,7 +184,7 @@ fi
 
 
 if [ ${restart} ]; then
-    assert_success "Restarting ${serv}.service..." \
+    assert-success "Restarting ${serv}.service..." \
                    "sudo service ${serv} restart" \
                    "Error restarting ${serv}.service" \
                    ${SERVICE_ERROR} \

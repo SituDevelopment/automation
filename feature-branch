@@ -92,7 +92,7 @@ fi
 repo=$1
 feature=$2
 
-assert_success "Cloning base branch of repository..." \
+assert-success "Cloning base branch of repository..." \
                "git clone git@github.com:${owner}/${repo} --branch '${base}' '/var/www/features/${repo}-${feature}'" \
                "Error cloning repository" \
                ${GIT_ERROR} \
@@ -102,35 +102,35 @@ assert_success "Cloning base branch of repository..." \
 eval "cd '/var/www/features/${repo}-${feature}'"
 
 
-assert_success "Creating feature branch..." \
+assert-success "Creating feature branch..." \
                "git branch '${feature}'" \
                "Error creating feature branch" \
                ${GIT_ERROR} \
                "Created feature branch\n"
 
 
-assert_success "Publishing feature branch to remote repository..." \
+assert-success "Publishing feature branch to remote repository..." \
                "git push --set-upstream origin '${feature}'" \
                "Error publishing feature branch to remote repository" \
                ${GIT_ERROR} \
                "Published feature branch to remote repository\n"
 
 
-assert_success "Checking out to feature branch..." \
+assert-success "Checking out to feature branch..." \
                "git checkout '${feature}'" \
                "Error checking out to feature branch" \
                ${GIT_ERROR} \
                "Checked out feature branch\n"
 
 
-assert_success "Checking for VS Code command..." \
+assert-success "Checking for VS Code command..." \
                "which code" \
                "VS Code command not found" \
                ${SUCCESS} \
                "VS Code command found\n"
 
 
-assert_success "Opening project in VS Code..." \
+assert-success "Opening project in VS Code..." \
                "code '/var/www/features/${repo}-${feature}'" \
                "Error opening project in VS Code" \
                ${VS_CODE_ERROR} \

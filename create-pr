@@ -88,14 +88,14 @@ self="$(cat $HOME/.ghusername)"
 reviewers="$(cat $HOME/.ghothers | xargs -I % echo -n ' --reviewer %')"
 
 
-assert_success "Creating pull request..." \
+assert-success "Creating pull request..." \
                "gh pr create --assignee ${self} --base '${base}' --fill --label '${labels}' ${reviewers}" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
 
 
-assert_success "Enabling auto-merge..." \
+assert-success "Enabling auto-merge..." \
                "gh pr merge ${testb} --auto --rebase" \
                "Error enabling auto-merge" \
                ${GITHUB_ERROR} \

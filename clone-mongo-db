@@ -69,7 +69,7 @@ fi
 [[ -z "${MONGO_USER}" ]] && read -p "Enter MongoDB username: " MONGO_USER
 [[ -z "${MONGO_PASS}" ]] && read -p "Enter MongoDB password: " MONGO_PASS
 
-assert_success "Cloning database $1 to $2..." \
+assert-success "Cloning database $1 to $2..." \
     "mongodump --archive --authenticationDatabase=admin --db=$1 --authenticationMechanism=SCRAM-SHA-256 --username='${MONGO_USER}' --password='${MONGO_PASS}' | mongorestore --archive --authenticationDatabase=admin --nsFrom='$1.*' --nsTo='$2.*' --authenticationMechanism=SCRAM-SHA-256 --username='${MONGO_USER}' --password='${MONGO_PASS}'" \
     "Failed to clone database $1 to $2." \
     ${MONGO_ERROR} \
