@@ -89,22 +89,22 @@ to_ignore=("node_modules" "venv" "build" "dist" ".github" ".vscode")
 
 max=${#to_ignore[@]}
 index=1
-prefix="-name '${to_ignore[0]}' -prune"
+ignore="-name '${to_ignore[0]}' -prune"
 
 while [ ${index} -lt ${max} ]; do
-    prefix="${prefix} -o -name '${to_ignore[${index}]}' -prune"
+    ignore="${ignore} -o -name '${to_ignore[${index}]}' -prune"
     index=$((index + 1))
 done
 
 max=$#
 index=2
-options="-e '$1\$'"
+extensions="-e '$1\$'"
 shift 1
 
 while [ ${index} -le ${max} ]; do
-    options="${options} -e '$1\$'"
+    extensions="${extensions} -e '$1\$'"
     index=$((index + 1))
     shift 1
 done
 
-eval "find . ${prefix} -o -print | grep ${options}"
+eval "find . ${ignore} -o -print | grep ${extensions}"
