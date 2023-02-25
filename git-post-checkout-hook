@@ -28,15 +28,16 @@ if [ $? -eq 0 ]; then
     source venv/bin/activate > /dev/null
 
     echo "Ensuring updated depencencies (including Black) are installed..."
+    pip install black > /dev/null
     if [ -f "requirements.txt" ]; then
         pip install -r requirements.txt > /dev/null
     fi
 
     echo "Ensuring Pip requirements are up to date..."
-    pip install black > /dev/null
     pip freeze > requirements.txt
 
     deactivate > /dev/null
+    git add requirements.txt > /dev/null
 fi
 
 
@@ -47,7 +48,6 @@ if [ $? -eq 0 ]; then
     if [ ! -f "package.json" ]; then
         echo "Initializing npm project..."
         npm init -y > /dev/null
-        git add package.json package-lock.json > /dev/null
     fi
 
     echo "Ensuring updated depencencies (including Prettier) are installed..."
@@ -57,10 +57,11 @@ if [ $? -eq 0 ]; then
     echo "Ensuring Prettier configuration files are present..."
     if [ ! -f ".prettierrc.json" ]; then
         cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
-        git add .prettierrc.json > /dev/null
     fi
+
     if [ ! -f ".prettierignore" ]; then
         cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
-        git add .prettierignore > /dev/null
     fi
+
+    git add package.json package-lock.json .prettierrc.json .prettierignore > /dev/null
 fi
