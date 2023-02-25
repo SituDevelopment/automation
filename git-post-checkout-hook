@@ -7,10 +7,6 @@
 # across all developers working on all projects.
 
 
-echo "Marking repository as Git safe..."
-sudo git config --system --add safe.directory `pwd` > /dev/null
-
-
 find-by-extension ".py" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found Python!"
