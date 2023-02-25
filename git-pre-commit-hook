@@ -7,68 +7,21 @@
 # projects, regarless of the developer or their development environment.
 
 
-status=0
-
-find-by-extension ".py" > /dev/null
-if [ $? -eq 0 ]; then
-    echo "Found Python!"
-
-    if [ -f "config.py" -a ! -f "config.example.py" ]; then
-        cp config.py config.example.py > /dev/null
-        git add config.example.py > /dev/null
-        echo "Please edit \`config.example.py\` to ensure that it does not contain any sensitive information."
-
-        status=1
-    fi
-
-    if [ ! -d "venv" ]; then
-        echo "Creating virtual environment..."
-        python3 -m venv venv > /dev/null
-    fi
-
+if [ -d "venv" ]; then
     source venv/bin/activate > /dev/null
-
-    echo "Formatting Python files..."
-    pip install black > /dev/null
-    black . > /dev/null
-
-    echo "Ensuring Pip requirements are up to date..."
     pip freeze > requirements.txt
-    git add requirements.txt > /dev/null
-
-    deactivate > /dev/null
 fi
 
+git diff --staged --name-only \
+    | xargs -I % echo "[ -f % ] && [[ % =~ .py ]] && black %" \
+    | sh
 
-find-by-extension ".html" ".html.jinja" ".css" ".*json" ".js" ".ts" ".jsx" ".tsx" ".cjs" > /dev/null
-if [ $? -eq 0 ]; then
-    echo "Found web stuff!"
+git diff --staged --name-only \
+    | xargs -I % echo "[ -f % ] && [[ % =~ .html|.html.jinja|.css|.json|.js|.ts|.jsx|.tsx|.cjs ]] && npx prettier --write %" \
+    | sh
 
-    if [ ! -f "package.json" ]; then
-        echo "Initializing npm project..."
-        npm init -y > /dev/null
-    fi
+git diff --staged --name-only \
+    | xargs -I % echo "[ -f % ] && git add %" \
+    | sh
 
-    echo "Ensuring updated depencencies (including Prettier) are installed..."
-    npm install > /dev/null
-    npm install prettier --save-dev > /dev/null
-    git add package.json > /dev/null
-
-    echo "Ensuring Prettier configuration files are present..."
-    if [ ! -f ".prettierrc.json" ]; then
-        cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
-        git add .prettierrc.json > /dev/null
-    fi
-    if [ ! -f ".prettierignore" ]; then
-        cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
-        git add .prettierignore > /dev/null
-    fi
-
-    echo "Formatting web files..."
-    npx prettier --write . > /dev/null
-fi
-
-
-git diff --staged --name-only | xargs -I % echo "[ -f % ] && git add %" | sh > /dev/null
-
-exit ${status}
+git add requirements.txt
