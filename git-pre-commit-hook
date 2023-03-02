@@ -10,6 +10,7 @@
 if [ -d "venv" ]; then
     source venv/bin/activate > /dev/null
     pip freeze > requirements.txt
+    git add requirements.txt
 fi
 
 git diff --staged --name-only \
@@ -23,5 +24,3 @@ git diff --staged --name-only \
 git diff --staged --name-only \
     | xargs -I % echo "[ -f % ] && git add %" \
     | sh
-
-git add requirements.txt
