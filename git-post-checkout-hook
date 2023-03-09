@@ -29,11 +29,7 @@ if [ $? -eq 0 ]; then
         pip install -r requirements.txt > /dev/null
     fi
 
-    echo "Ensuring Pip requirements are up to date..."
-    pip freeze > requirements.txt
-
     deactivate > /dev/null
-    git add requirements.txt > /dev/null
 fi
 
 
@@ -58,6 +54,4 @@ if [ $? -eq 0 ]; then
     if [ ! -f ".prettierignore" ]; then
         cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
     fi
-
-    git add package.json package-lock.json .prettierrc.json .prettierignore > /dev/null
 fi
