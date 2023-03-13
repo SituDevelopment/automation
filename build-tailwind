@@ -3,7 +3,8 @@
 #
 # Determines if tailwind is being used in the project and there is an
 # input.css file then builds it into the main.css file using the tailwind
-# watch flag if the -w flag is passed.
+# watch flag if the -w flag is passed. Needs to be run from the root of
+# the project.
 #
 #
 # Usage: 
@@ -45,7 +46,8 @@ Usage: build-tailwind [-w]
 
 Determines if tailwind is being used in the project and there is an
 input.css file then builds it into the main.css file using the tailwind
-watch flag if the -w flag is passed.
+watch flag if the -w flag is passed. Needs to be run from the root of
+the project with a tailwind.config.js file.
 
 Options:
     -w  Watch for changes and rebuild
@@ -91,7 +93,7 @@ cd $DIR
 
 
 assert_success "find . -name 'tailwind.config.js' > /dev/null" \
-    "Tailwind config file not found." \
+    "Tailwind config file not found. Please run 'npx tailwindcss init'." \
     $INPUT_NOT_FOUND \
     "Found tailwind config file."
 
