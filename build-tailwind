@@ -1,0 +1,129 @@
+#!/bin/bash
+#
+#
+# Determines if tailwind is being used in the project and there is an
+# input.css file then builds it into the main.css file using the tailwind
+# watch flag if the -w flag is passed.
+#
+#
+# Usage: 
+#   build-tailwind [-w]
+#   build-tailwind [-h]
+#
+# Options:
+#   -w  Watch for changes and rebuild
+#   -h  Show this help message
+#
+#
+# Exit codes:
+# 0 - Success
+# 1 - Incorrect usage
+# 2 - Tailwind input file not found
+# 3 - input.css is not being used for tailwind
+# 4 - Tailwind build failed
+
+
+# exit codes
+SUCCESS=0
+INCORRECT_USAGE=1
+INPUT_NOT_FOUND=2
+INPUT_NOT_USED=3
+BUILD_FAILED=4
+
+
+#######################################
+# Display help message.
+# Arguments:
+#   None
+# Outputs:
+#   Writes help message to stdout
+#######################################
+showhelp() {
+cat << EOF
+Usage: build-tailwind [-w]
+       build-tailwind [-h]
+
+Determines if tailwind is being used in the project and there is an
+input.css file then builds it into the main.css file using the tailwind
+watch flag if the -w flag is passed.
+
+Options:
+    -w  Watch for changes and rebuild
+    -h  Show this help message
+EOF
+}
+
+
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - command to run
+#   $2 - error message to print on failure
+#   $3 - exit code to use on failure
+#   $4 - success message to print on success
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    eval $1
+    if [ $? -ne 0 ]; then
+        echo "$2"
+        echo -e "\nGoodbye..."
+        exit $3
+    fi
+    echo -e $4
+}
+
+
+
+# parse command line arguments
+while getopts "wh" opt; do
+    case $opt in
+        w) WATCH_FLAG="-w" ;;
+        h) showhelp; exit ${SUCCESS} ;;
+        \?) showhelp; exit $INCORRECT_USAGE ;;
+    esac
+done
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
+
+assert_success "find . -name 'tailwind.config.js' > /dev/null" \
+    "Tailwind config file not found." \
+    $INPUT_NOT_FOUND \
+    "Found tailwind config file."
+
+
+assert_success "find . -name 'input.css' > /dev/null" \
+    "Tailwind input file not found." \
+    $INPUT_NOT_FOUND \
+    "Found tailwind input file."
+
+
+INPUT_PATH=$(find . -name "input.css")
+
+# Where the command is run from is important for the build to work
+BUILD_PATH=$(echo $INPUT_PATH | grep -oP '.*(?=static)')
+cd $BUILD_PATH
+
+INPUT_PATH=$(echo $INPUT_PATH | grep -oP '(?=static).*')
+
+assert_success "grep -q '@tailwind base;' $INPUT_PATH" \
+    "Tailwind input file not being used." \
+    $INPUT_NOT_USED \
+    "Tailwind input file is being used."
+
+# main.css will be created in the same directory as input.css
+MAIN_PATH=$(echo $INPUT_PATH | sed 's/input/main/')
+
+# assert success only if WATCH_FLAG is not set
+if [ -z "$WATCH_FLAG" ]; then
+    assert_success "npx tailwindcss -i $INPUT_PATH -o $MAIN_PATH" \
+        "Tailwind build failed." \
+        $BUILD_FAILED \
+        "Tailwind build successful."
+else
+    npx tailwindcss -i $INPUT_PATH -o $MAIN_PATH $WATCH_FLAG
+fi

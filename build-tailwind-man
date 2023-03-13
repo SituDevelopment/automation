@@ -1,0 +1,24 @@
+.TH PROD 1 "March 2023" "1.0" "Automation Manual"
+
+.SH NAME
+build-tailwind \- build a Tailwind CSS file
+
+.SH SYNOPSIS
+build-tailwind -w
+
+build-tailwind -h
+
+.SH DESCRIPTION
+Builds a Tailwind CSS file.
+
+.SH OPTIONS
+.TP
+-w
+Watch for changes and rebuild.
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+Nathan Thomas (nathan@situ.com.au)
