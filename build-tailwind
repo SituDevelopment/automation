@@ -108,7 +108,7 @@ assert_success "find . -name 'input.css' > /dev/null" \
 
 INPUT_PATH=$(find . -name "input.css")
 
-# Where the command is run from is important for the build to work
+# where the command is run from is important for the build to work
 BUILD_PATH=$(echo $INPUT_PATH | grep -oP '.*(?=static)')
 cd $BUILD_PATH
 
