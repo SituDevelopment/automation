@@ -95,7 +95,7 @@ cd $DIR
 assert_success "find . -name 'tailwind.config.js' > /dev/null" \
     "Tailwind config file not found. Please run 'npx tailwindcss init'." \
     $INPUT_NOT_FOUND \
-    "Found tailwind config file."
+    "Found Tailwind config file."
 
 
 assert_success "find . -name 'input.css' > /dev/null" \
