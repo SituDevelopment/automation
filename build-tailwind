@@ -20,7 +20,7 @@
 # 0 - Success
 # 1 - Incorrect usage
 # 2 - Tailwind input file not found
-# 3 - input.css is not being used for tailwind
+# 3 - input.css is not being used for Tailwind
 # 4 - Tailwind build failed
 
 
