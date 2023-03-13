@@ -101,7 +101,7 @@ assert_success "find . -name 'tailwind.config.js' > /dev/null" \
 assert_success "find . -name 'input.css' > /dev/null" \
     "Tailwind input file not found." \
     $INPUT_NOT_FOUND \
-    "Found tailwind input file."
+    "Found Tailwind input file."
 
 
 INPUT_PATH=$(find . -name "input.css")
