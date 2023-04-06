@@ -13,6 +13,10 @@ if [ -d "venv" ]; then
     git add requirements.txt
 fi
 
+if [ -f "package.json" ]; then
+    git add package.json package-lock.json
+fi
+
 git diff --staged --name-only \
     | xargs -I % echo "[ -f % ] && [[ % =~ .py ]] && black %" \
     | sh
