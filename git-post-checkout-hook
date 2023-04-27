@@ -24,6 +24,7 @@ if [ $? -eq 0 ]; then
     source venv/bin/activate > /dev/null
 
     echo "Ensuring updated depencencies (including Black) are installed..."
+    pip install --upgrade pip > /dev/null
     pip install black > /dev/null
     if [ -f "requirements.txt" ]; then
         pip install -r requirements.txt > /dev/null
