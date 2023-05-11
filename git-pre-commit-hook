@@ -20,7 +20,7 @@ if [ -f "package.json" ]; then
 fi
 
 git diff --staged --name-only \
-    | xargs -I % echo "[ -f % ] && [[ % =~ .py ]] && black % && isort %" \
+    | xargs -I % echo "[ -f % ] && [[ % =~ .py ]] && black % && isort --profile black %" \
     | sh
 
 git diff --staged --name-only \
