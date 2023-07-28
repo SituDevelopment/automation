@@ -6,10 +6,12 @@
 #
 #
 # Usage:
-#   feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+#   feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
 #   feature-branch -h
 #
 # Options:
+#   -r                    Reuse the current VS Code window.
+#
 #   -o <owner>            Owner of the repository.
 #                         Defaults to "SituDevelopment".
 #
@@ -47,13 +49,15 @@ VS_CODE_ERROR=3
 showhelp() {
 cat << EOF
 Usage:
-  feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+  feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
   feature-branch -h
 
 Creates a new Git feature branch in the given repository and publishes it to GitHub.
 
 
 Options:
+  -r                    Reuse the current VS Code window.
+
   -o <owner>            Owner of the repository.
                         Defaults to "SituDevelopment".
 
@@ -93,8 +97,9 @@ assert_success() {
 
 
 # assign repository and branch variables according to given arguments
-while getopts ":o:b:h" flag; do
+while getopts ": r o: b: h" flag; do
     case "${flag}" in
+        r) reuse=" --reuse-window" ;;
         o) owner="${OPTARG}" ;;
         b) base="${OPTARG}" ;;
         h) showhelp; exit ${SUCCESS} ;;
@@ -103,6 +108,7 @@ while getopts ":o:b:h" flag; do
 done
 
 # set default values for unset variables
+reuse=${reuse:=""}
 owner=${owner:="SituDevelopment"}
 base=${base:="test"}
 
@@ -154,7 +160,7 @@ assert_success "Checking for VS Code command..." \
 
 
 assert_success "Opening project in VS Code..." \
-               "code '/var/www/features/${repo}-${feature}'" \
+               "code${reuse} '/var/www/features/${repo}-${feature}'" \
                "Error opening project in VS Code" \
                ${VS_CODE_ERROR} \
                "Opened project in VS Code\n"
