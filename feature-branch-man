@@ -4,7 +4,7 @@
 feature-branch \- create a new feature branch
 
 .SH SYNOPSIS
-feature-branch [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
 
 feature-branch -h
 
@@ -14,6 +14,10 @@ Creates a new Git feature branch in the given repository and publishes it to Git
 If the VS Code command: `code` is available, the project will be opened in VS Code.
 
 .SH OPTIONS
+.TP
+-r
+Reuse the current VS Code window.
+
 .TP
 -o <owner>
 Owner of the repository. Defaults to "SituDevelopment".
