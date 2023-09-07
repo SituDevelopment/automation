@@ -23,6 +23,12 @@
             "options": {
                 "parser": "html"
             }
+        },
+        {
+            "files": "**/*.yaml",
+            "options": {
+                "tabWidth": 2
+            }
         }
     ]
 }
