@@ -30,7 +30,7 @@ if [ $? -eq 0 ]; then
 fi
 
 
-find-by-extension ".html" ".html.jinja" ".css" ".*json" ".js" ".ts" ".jsx" ".tsx" ".cjs" > /dev/null
+find-by-extension ".html" ".html.jinja" ".css" ".json" ".yaml" ".yml" ".js" ".ts" ".jsx" ".tsx" ".cjs" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found web stuff!"
 
