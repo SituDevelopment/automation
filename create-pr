@@ -111,7 +111,7 @@ self="$(cat $HOME/.ghusername)"
 
 
 assert_success "Creating pull request..." \
-               "gh pr create --assignee ${self} --reviewer SituDevelopment/employees --base '${base}' --fill --label '${labels}'" \
+               "gh pr create --assignee @me --reviewer SituDevelopment/employees --base '${base}' --fill --label '${labels}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
