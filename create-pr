@@ -108,11 +108,10 @@ while [ $# -gt 1 ]; do
 done
 
 self="$(cat $HOME/.ghusername)"
-reviewers="$(cat $HOME/.ghothers | xargs -I % echo -n ' --reviewer %')"
 
 
 assert_success "Creating pull request..." \
-               "gh pr create --assignee ${self} --base '${base}' --fill --label '${labels}' ${reviewers}" \
+               "gh pr create --assignee ${self} --reviewer SituDevelopment/employees --base '${base}' --fill --label '${labels}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
