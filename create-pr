@@ -107,15 +107,21 @@ while [ $# -gt 1 ]; do
     labels="${labels},$1"
 done
 
-self="$(cat $HOME/.ghusername)"
-reviewers="$(cat $HOME/.ghothers | xargs -I % echo -n ' --reviewer %')"
-
 
 assert_success "Creating pull request..." \
-               "gh pr create --assignee @me --base '${base}' --fill --label '${labels}' ${reviewers}" \
+               "gh pr create --assignee @me --base '${base}' --fill --label '${labels}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
+
+
+repo=$(gh repo view --json name --template {{.name}})
+number=$(gh pr view --json number --template {{.number}})
+assert_success "Requesting review from 'Employees' team..." \
+               "gh api -X POST -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /repos/SituDevelopment/${repo}/pulls/${number}/requested_reviewers -f team_reviewers[]=employees" \
+               "Error requesting review" \
+               ${GITHUB_ERROR} \
+               "Review requested\n"
 
 
 assert_success "Enabling auto-merge..." \
