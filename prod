@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 #
+# Warning:
+#   This command enables a legacy method of deployment.
+#   We should no longer be using test and production branches.
 #
 # Pushes the contents of the test branch to the production branch of the
 # repository cloned into the current working directory, pulls the changes to the
@@ -120,6 +123,11 @@ assert_success() {
     echo -e $5
 }
 
+
+echo -e "\033[0;33mWARNING:
+  This command enables a legacy method of deployment.
+  We should no longer be using test and production branches.\033[0m
+"
 
 # assign branch and service variables according to given arguments
 while getopts ":t:p:s:n:d:f:rh" flag; do

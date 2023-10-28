@@ -1,4 +1,9 @@
-.TH PROD 1 "July 2022" "1.0" "Automation Manual"
+.TH PROD 1 "October 2022" "1.0" "Automation Manual"
+
+.SH DEPRECATION WARNING
+This command enables a legacy method of deployment.
+
+We should no longer be using test and production branches.
 
 .SH NAME
 prod \- push a test branch to production
@@ -50,4 +55,3 @@ Display help and exit.
 
 .SH AUTHOR
 William Sawyer (william@situ.com.au)
-
