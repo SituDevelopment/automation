@@ -4,15 +4,16 @@
 # Creates a GitHub pull request with the given properties.
 #
 # Usage:
-#   create-pr <base-branch> <label> [<label> ...]
+#   create-pr [-b <base-branch>] <label> [<label> ...]
 #   create-pr -h
 #
 # Arguments:
-#   <base-branch>     Name of the branch from which to pull changes.
-#
 #   <label>           Label to add to the pull request.
 #
 # Options:
+#   -b <base-branch>  Name of the branch from which to pull changes.
+#                     Defaults to the repository's default branch.
+#
 #   -h                Display help and exit.
 #
 #
@@ -43,19 +44,20 @@ fi
 
 cat << EOF
 Usage:
-  create-pr <base-branch> <label> [<label> ...]
+  create-pr [-b <base-branch>] <label> [<label> ...]
   create-pr -h
 
 Creates a GitHub pull request with the given properties.
 
 Arguments:
-    <base-branch>   Name of the branch from which to pull changes.
-
-    <label>         Label to add to the pull request.
-                    ${labels}
+    <label>             Label to add to the pull request.
+                        ${labels}
 
 Options:
-    -h              Display help and exit.
+    -b <base-branch>    Name of the branch from which to pull changes.
+                        Defaults to the repository's default branch.
+
+    -h                  Display help and exit.
 EOF
 }
 
@@ -84,28 +86,34 @@ assert_success() {
 
 
 # assign branch and service variables according to given arguments
-while getopts "h" flag; do
+while getopts "b: h" flag; do
     case "${flag}" in
+        b) base="${OPTARG}" ;;
         h) showhelp; exit ${SUCCESS} ;;
         ?) showhelp; exit ${INCORRECT_USAGE} ;;
     esac
 done
-shift $((OPTIND - 1))
 
-if [ $# -lt 2 ]; then
+shift $((OPTIND - 1))
+if [ $# -lt 1 ]; then
     showhelp
     exit ${INCORRECT_USAGE}
 fi
 
-base="$1"
-shift 1
 
 labels="$1"
-
 while [ $# -gt 1 ]; do
     shift 1
     labels="${labels},$1"
 done
+       
+if [ -z "${base}" ]; then
+    assert_success "Determining base branch..." \
+                   "base=$(gh api /repos/$(git remote get-url origin | sed 's/git@github.com://')/branches?protected=true --jq '.[0].name')" \
+                   "Error determining base branch" \
+                   ${GITHUB_ERROR} \
+                   "Base branch determined\n"
+fi
 
 
 assert_success "Creating pull request..." \
