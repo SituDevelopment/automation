@@ -16,7 +16,7 @@
 #                         Defaults to "SituDevelopment".
 #
 #   -b <base-branch>      Name of the branch from which to take the feature branch.
-#                         Defaults to "test".
+#                         Defaults to the repository's default branch.
 #
 #   <repository>          Name of the repository.
 #
@@ -62,7 +62,7 @@ Options:
                         Defaults to "SituDevelopment".
 
   -b <base-branch>      Name of the branch from which to take the feature branch.
-                        Defaults to "test".
+                        Defaults to the repository's default branch.
 
   <repository>          Name of the repository.
 
@@ -107,11 +107,6 @@ while getopts ": r o: b: h" flag; do
     esac
 done
 
-# set default values for unset variables
-reuse=${reuse:=""}
-owner=${owner:="SituDevelopment"}
-base=${base:="test"}
-
 shift $((${OPTIND} - 1))
 if [ $# -ne 2 ]; then
     showhelp
@@ -120,6 +115,11 @@ fi
 
 repo=$1
 feature=$2
+
+# set default values for unset variables
+reuse=${reuse:=""}
+owner=${owner:="SituDevelopment"}
+base=${base:=$(gh api /repos/${owner}/${repo}/branches?protected=true --jq '.[0].name')}
 
 assert_success "Cloning base branch of repository..." \
                "git clone git@github.com:${owner}/${repo} --branch '${base}' '/var/www/features/${repo}-${feature}'" \
