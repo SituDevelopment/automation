@@ -1,4 +1,11 @@
-.TH GITHUB 1 "July 2022" "1.0" "Automation Manual"
+.TH GITHUB 1 "October 2022" "1.0" "Automation Manual"
+
+.SH DEPRECATION WARNING
+This command enables a legacy method of deployment.
+
+We should no longer be using test and production branches or deploying from the local server.
+
+Please consider whether you can deploy the application more appropriately.
 
 .SH NAME
 github \- create a new github repository

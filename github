@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 #
+# Warning:
+#   This command enables a legacy method of deployment.
+#   We should no longer be using test and production branches or deploying from the local server.
+#   Please consider whether you can deploy the application more appropriately.
 #
 # Creates a new GitHub repository with test and production branches and clones
 # the branches locally.
@@ -111,6 +115,20 @@ assert_success() {
 }
 
 
+echo -e "\033[0;33mWARNING:
+  This command enables a legacy method of deployment.
+  We should no longer be using test and production branches or deploying from the local server.
+  Please consider whether you can deploy the application more appropriately.\033[0m
+"
+
+read -p "Do you wish to continue? (y/n) " -n 1 -r RESULT
+if [ ${RESULT} == "y" ]; then
+    echo -e "\n"
+else
+    echo -e "\nGoodbye..."
+    exit ${SUCCESS}
+fi
+
 # assign repository and branch variables according to given arguments
 while getopts ":o:r:d:v:t:p:h" flag; do
     case "${flag}" in
@@ -126,7 +144,6 @@ while getopts ":o:r:d:v:t:p:h" flag; do
 done
 
 # set default values for unset variables
-## creation variables
 owner=${owner:="SituDevelopment"}
 repo=${repo:=$(basename ${PWD})}
 desc=${desc:=""}
