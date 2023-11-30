@@ -85,7 +85,7 @@ assert_success() {
 }
 
 
-# assign branch and service variables according to given arguments
+# assign branch variable according to given argument
 while getopts "b: h" flag; do
     case "${flag}" in
         b) base="${OPTARG}" ;;
