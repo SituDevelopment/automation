@@ -10,7 +10,7 @@
 
 if [ ! -f "package.json" ]; then
     echo "Initializing npm project..."
-    npm init -y > /dev/null
+    npm init --yes > /dev/null
 fi
 
 echo "Installing dependencies..."
