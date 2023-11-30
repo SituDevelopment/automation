@@ -1,0 +1,169 @@
+#!/usr/bin/bash
+#
+#
+# Creates a new Git branch in the given repository and publishes it to GitHub.
+# If the VS Code command: `code` is available, the project will be opened in VS Code.
+#
+#
+# Usage:
+#   branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
+#   branch -h
+#
+# Options:
+#   -r                    Reuse the current VS Code window.
+#
+#   -o <owner>            Owner of the repository.
+#                         Defaults to "SituDevelopment".
+#
+#   -b <base-branch>      Name of the branch from which to take the new branch.
+#                         Defaults to the repository's default branch.
+#
+#   <repository>          Name of the repository.
+#
+#   <branch-name>         Name of the new branch to create.
+#
+#   -h                    Display help and exit.
+#
+#
+# Exit codes:
+#   0 - success
+#   1 - incorrect usage
+#   2 - git error
+#   3 - VS Code error
+
+
+# exit codes
+SUCCESS=0
+INCORRECT_USAGE=1
+GIT_ERROR=2
+VS_CODE_ERROR=3
+
+
+#######################################
+# Display help message.
+# Arguments:
+#   None
+# Outputs:
+#   Writes help message to stdout
+#######################################
+showhelp() {
+cat << EOF
+Usage:
+  branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
+  branch -h
+
+Creates a new Git branch in the given repository and publishes it to GitHub.
+
+
+Options:
+  -r                    Reuse the current VS Code window.
+
+  -o <owner>            Owner of the repository.
+                        Defaults to "SituDevelopment".
+
+  -b <base-branch>      Name of the branch from which to take the new branch.
+                        Defaults to the repository's default branch.
+
+  <repository>          Name of the repository.
+
+  <branch-name>         Name of the new branch to create.
+
+  -h                    Display help and exit.
+EOF
+}
+
+
+#######################################
+# Asserts the given command runs successfully.
+# Arguments:
+#   $1 - message to print before running command
+#   $2 - command to run
+#   $3 - error message to print on failure
+#   $4 - exit code to use on failure
+#   $5 - success message to print on success
+# Outputs:
+#   Writes error message to stdout
+#######################################
+assert_success() {
+    echo $1
+    eval $2
+    if [ $? -ne 0 ]; then
+        echo "$3"
+        echo -e "\nGoodbye..."
+        exit $4
+    fi
+    echo -e $5
+}
+
+
+# assign repository and branch variables according to given arguments
+while getopts ": r o: b: h" flag; do
+    case "${flag}" in
+        r) reuse=" --reuse-window" ;;
+        o) owner="${OPTARG}" ;;
+        b) base="${OPTARG}" ;;
+        h) showhelp; exit ${SUCCESS} ;;
+        ?) showhelp; exit ${INCORRECT_USAGE} ;;
+    esac
+done
+
+shift $((${OPTIND} - 1))
+if [ $# -ne 2 ]; then
+    showhelp
+    exit ${INCORRECT_USAGE}
+fi
+
+repo=$1
+branch=$2
+
+# set default values for unset variables
+reuse=${reuse:=""}
+owner=${owner:="SituDevelopment"}
+base=${base:=$(gh api /repos/${owner}/${repo}/branches?protected=true --jq '.[0].name')}
+
+assert_success "Cloning base branch of repository..." \
+               "git clone git@github.com:${owner}/${repo} --branch '${base}' '/var/www/development/${repo}-${branch}'" \
+               "Error cloning repository" \
+               ${GIT_ERROR} \
+               "Cloned base branch of repository\n"
+
+
+eval "cd '/var/www/development/${repo}-${branch}'"
+
+
+assert_success "Creating branch..." \
+               "git branch '${branch}'" \
+               "Error creating branch" \
+               ${GIT_ERROR} \
+               "Created branch\n"
+
+
+assert_success "Publishing branch to remote repository..." \
+               "git push --set-upstream origin '${branch}'" \
+               "Error publishing branch to remote repository" \
+               ${GIT_ERROR} \
+               "Published branch to remote repository\n"
+
+
+assert_success "Checking out to branch..." \
+               "git checkout '${branch}'" \
+               "Error checking out to branch" \
+               ${GIT_ERROR} \
+               "Checked out branch\n"
+
+
+assert_success "Checking for VS Code command..." \
+               "which code" \
+               "VS Code command not found" \
+               ${SUCCESS} \
+               "VS Code command found\n"
+
+
+assert_success "Opening project in VS Code..." \
+               "code${reuse} '/var/www/development/${repo}-${branch}'" \
+               "Error opening project in VS Code" \
+               ${VS_CODE_ERROR} \
+               "Opened project in VS Code\n"
+
+
+exit ${SUCCESS}

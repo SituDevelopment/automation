@@ -1,0 +1,42 @@
+.TH BRANCH 1 "November 2023" "3.0" "Automation Manual"
+
+.SH NAME
+branch \- create a new branch
+
+.SH SYNOPSIS
+branch [-r] [-o <owner>] [-b <base-branch>] <repository> <new-branch>
+
+branch -h
+
+.SH DESCRIPTION
+Creates a new Git branch in the given repository and publishes it to GitHub.
+
+If the VS Code command: `code` is available, the project will be opened in VS Code.
+
+.SH OPTIONS
+.TP
+-r
+Reuse the current VS Code window.
+
+.TP
+-o <owner>
+Owner of the repository. Defaults to "SituDevelopment".
+
+.TP
+-b <base-branch>
+Name of the branch from which to take the new branch. Defaults to the repository's default branch.
+
+.TP
+<repository>
+Name of the repository.
+
+.TP
+<new-branch>
+Name of the new branch to create.
+
+.TP
+-h
+Display help and exit.
+
+.SH AUTHOR
+William Sawyer (william@situ.com.au)
