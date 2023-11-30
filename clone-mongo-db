@@ -9,7 +9,7 @@
 #
 # Arguments:
 #   <db-name>         Name of the database to clone.
-#   
+#
 #   <clone-name>      Name of the clone database.
 #
 # Options:
@@ -44,7 +44,7 @@ Clones a MongoDB database.
 
 Arguments:
     <db-name>       Name of the database to clone.
-    
+
     <clone-name>    Name of the clone database.
 
 Options:
