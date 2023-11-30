@@ -1,13 +1,13 @@
 #!/usr/bin/bash
 #
 #
-# Creates a new Git feature branch in the given repository and publishes it to GitHub.
+# Creates a new Git bug fix branch in the given repository and publishes it to GitHub.
 # If the VS Code command: `code` is available, the project will be opened in VS Code.
 #
 #
 # Usage:
-#   feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
-#   feature-branch -h
+#   bugfix-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
+#   bugfix-branch -h
 #
 # Options:
 #   -r                    Reuse the current VS Code window.
@@ -15,16 +15,16 @@
 #   -o <owner>            Owner of the repository.
 #                         Defaults to "SituDevelopment".
 #
-#   -b <base-branch>      Name of the branch from which to take the feature branch.
+#   -b <base-branch>      Name of the branch from which to take the bug fix branch.
 #                         Defaults to the repository's default branch.
 #
 #   <repository>          Name of the repository.
 #
-#   <branch-name>         Name of the feature branch to create.
-#                         This name will be prefixed with "feature/".
+#   <branch-name>         Name of the bug fix branch to create.
+#                         This name will be prefixed with "bug/".
 #
 #   -h                    Display help and exit.
 
 # See '${parameter:offset}' and '${parameter:offset:length}'
 # under https://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion.
-branch ${@:1:$#-1} feature/${@:$#}
+branch ${@:1:$#-1} bug/${@:$#}

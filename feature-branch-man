@@ -1,10 +1,10 @@
-.TH FEATURE-BRANCH 1 "October 2023" "2.0" "Automation Manual"
+.TH FEATURE-BRANCH 1 "November 2023" "3.0" "Automation Manual"
 
 .SH NAME
 feature-branch \- create a new feature branch
 
 .SH SYNOPSIS
-feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <feature-branch>
+feature-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
 
 feature-branch -h
 
@@ -24,15 +24,15 @@ Owner of the repository. Defaults to "SituDevelopment".
 
 .TP
 -b <base-branch>
-Name of the branch from which to take the feature branch. Defaults to "test".
+Name of the branch from which to take the feature branch. Defaults to the repository's default branch.
 
 .TP
 <repository>
 Name of the repository.
 
 .TP
-<feature-branch>
-Name of the feature branch to create.
+<branch-name>
+Name of the feature branch to create. This name will be prefixed with `feature/`.
 
 .TP
 -h

@@ -7,6 +7,29 @@
 # across all developers working on all projects.
 
 
+
+if [ ! -f "package.json" ]; then
+    echo "Initializing npm project..."
+    npm init --yes > /dev/null
+fi
+
+echo "Installing dependencies..."
+npm install > /dev/null
+
+echo "Installing latest version of Prettier..."
+npm install prettier --save-dev > /dev/null
+
+if [ ! -f ".prettierrc.json" || ! -f ".prettierignore" ]; then
+    echo "Ensuring Prettier configuration files are present..."
+    if [ ! -f ".prettierrc.json" ]; then
+        cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
+    fi
+    if [ ! -f ".prettierignore" ]; then
+        cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
+    fi
+fi
+
+
 find-by-extension ".py" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found Python!"
@@ -20,35 +43,11 @@ if [ $? -eq 0 ]; then
 
     echo "Ensuring updated depencencies (including Black) are installed..."
     pip install --upgrade pip > /dev/null
-    pip install black > /dev/null
-    pip install isort > /dev/null
+    pip install black isort > /dev/null
+
     if [ -f "requirements.txt" ]; then
-        pip install -r requirements.txt > /dev/null
+        pip install --requirement requirements.txt > /dev/null
     fi
 
-    deactivate > /dev/null
-fi
-
-
-find-by-extension ".html" ".html.jinja" ".css" ".json" ".yaml" ".yml" ".js" ".ts" ".jsx" ".tsx" ".cjs" > /dev/null
-if [ $? -eq 0 ]; then
-    echo "Found web stuff!"
-
-    if [ ! -f "package.json" ]; then
-        echo "Initializing npm project..."
-        npm init -y > /dev/null
-    fi
-
-    echo "Ensuring updated depencencies (including Prettier) are installed..."
-    npm install > /dev/null
-    npm install prettier --save-dev > /dev/null
-
-    echo "Ensuring Prettier configuration files are present..."
-    if [ ! -f ".prettierrc.json" ]; then
-        cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
-    fi
-
-    if [ ! -f ".prettierignore" ]; then
-        cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
-    fi
+    pip freeze > requirements.txt
 fi
