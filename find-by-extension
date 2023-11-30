@@ -98,11 +98,11 @@ done
 
 max=$#
 index=2
-extensions="-e '$1\$'"
+extensions="--regexp= '$1\$'"
 shift 1
 
 while [ ${index} -le ${max} ]; do
-    extensions="${extensions} -e '$1\$'"
+    extensions="${extensions} --regexp= '$1\$'"
     index=$((index + 1))
     shift 1
 done

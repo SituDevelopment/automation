@@ -160,7 +160,7 @@ assert_success "Creating repository..." \
 
 
 assert_success "Adding 'Employees' team as collaborators..." \
-               "gh api --method PUT -H 'Accept: application/vnd.github+json' '/orgs/${owner}/teams/employees/repos/${repo}' -f permission=admin" \
+               "gh api --method PUT --header 'Accept: application/vnd.github+json' '/orgs/${owner}/teams/employees/repos/${repo}' --field permission=admin" \
                "Error adding 'Employees' team as collaborators" \
                ${GITHUB_ERROR} \
                "'Employees' team added as collaborators\n"
