@@ -19,7 +19,7 @@ npm install > /dev/null
 echo "Installing latest version of Prettier..."
 npm install prettier --save-dev > /dev/null
 
-if [ ! -f ".prettierrc.json" || ! -f ".prettierignore" ]; then
+if [ ! ( -f ".prettierrc.json" && -f ".prettierignore" ) ]; then
     echo "Ensuring Prettier configuration files are present..."
     if [ ! -f ".prettierrc.json" ]; then
         cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
