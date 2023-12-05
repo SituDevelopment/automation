@@ -7,13 +7,13 @@
 # projects, regarless of the developer or their development environment.
 
 
-if [ -d "venv" ]; then
+if [[ -d "venv" ]]; then
     source venv/bin/activate > /dev/null
     pip freeze > requirements.txt
     git add requirements.txt
 fi
 
-if [ -f "package.json" ]; then
+if [[ -f "package.json" ]]; then
     git add package.json package-lock.json
 fi
 

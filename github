@@ -106,7 +106,7 @@ EOF
 assert_success() {
     echo $1
     eval $2
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "$3"
         echo -e "\nGoodbye..."
         exit $4
@@ -122,7 +122,7 @@ echo -e "\033[0;33mWARNING:
 "
 
 read -p "Do you wish to continue? (y/n) " -n 1 -r RESULT
-if [ ${RESULT} == "y" ]; then
+if [[ ${RESULT} == "y" ]]; then
     echo -e "\n"
 else
     echo -e "\nGoodbye..."

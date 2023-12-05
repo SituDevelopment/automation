@@ -67,7 +67,7 @@ EOF
 assert_success() {
     echo $1
     eval $2
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "$3"
         echo -e "\nGoodbye..."
         exit $4
@@ -91,7 +91,7 @@ max=${#to_ignore[@]}
 index=1
 ignore="-name '${to_ignore[0]}' -prune"
 
-while [ ${index} -lt ${max} ]; do
+while [[ ${index} -lt ${max} ]]; do
     ignore="${ignore} -o -name '${to_ignore[${index}]}' -prune"
     index=$((index + 1))
 done
@@ -101,7 +101,7 @@ index=2
 extensions="--regexp= '$1\$'"
 shift 1
 
-while [ ${index} -le ${max} ]; do
+while [[ ${index} -le ${max} ]]; do
     extensions="${extensions} --regexp= '$1\$'"
     index=$((index + 1))
     shift 1

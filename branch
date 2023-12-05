@@ -87,7 +87,7 @@ EOF
 assert_success() {
     echo $1
     eval $2
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "$3"
         echo -e "\nGoodbye..."
         exit $4
@@ -108,7 +108,7 @@ while getopts ": r o: b: h" flag; do
 done
 
 shift $((${OPTIND} - 1))
-if [ $# -ne 2 ]; then
+if [[ $# -ne 2 ]]; then
     showhelp
     exit ${INCORRECT_USAGE}
 fi

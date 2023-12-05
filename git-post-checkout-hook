@@ -8,7 +8,7 @@
 
 
 
-if [ ! -f "package.json" ]; then
+if [[ ! -f "package.json" ]]; then
     echo "Initializing npm project..."
     npm init --yes > /dev/null
 fi
@@ -19,22 +19,22 @@ npm install > /dev/null
 echo "Installing latest version of Prettier..."
 npm install prettier --save-dev > /dev/null
 
-if [ ! ( -f ".prettierrc.json" && -f ".prettierignore" ) ]; then
+if [[ ! ( -f ".prettierrc.json" && -f ".prettierignore" ) ]]; then
     echo "Ensuring Prettier configuration files are present..."
-    if [ ! -f ".prettierrc.json" ]; then
+    if [[ ! -f ".prettierrc.json" ]]; then
         cp /usr/local/share/style/prettierrc.json .prettierrc.json > /dev/null
     fi
-    if [ ! -f ".prettierignore" ]; then
+    if [[ ! -f ".prettierignore" ]]; then
         cp /usr/local/share/style/prettierignore .prettierignore > /dev/null
     fi
 fi
 
 
 find-by-extension ".py" > /dev/null
-if [ $? -eq 0 ]; then
+if [[ $? -eq 0 ]]; then
     echo "Found Python!"
 
-    if [ ! -d "venv" ]; then
+    if [[ ! -d "venv" ]]; then
         echo "Creating virtual environment..."
         python3 -m venv venv > /dev/null
     fi
@@ -45,7 +45,7 @@ if [ $? -eq 0 ]; then
     pip install --upgrade pip > /dev/null
     pip install black isort > /dev/null
 
-    if [ -f "requirements.txt" ]; then
+    if [[ -f "requirements.txt" ]]; then
         pip install --requirement requirements.txt > /dev/null
     fi
 

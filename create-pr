@@ -38,7 +38,7 @@ GITHUB_ERROR=2
 showhelp() {
 # Get list of labels for the current repository
 labels=$(gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
-if [ -n "${labels}" ]; then
+if [[ -n "${labels}" ]]; then
     labels=$'Available labels:\n'$labels
 fi
 
@@ -76,7 +76,7 @@ EOF
 assert_success() {
     echo $1
     eval $2
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "$3"
         echo -e "\nGoodbye..."
         exit $4
@@ -95,19 +95,19 @@ while getopts "b: h" flag; do
 done
 
 shift $((OPTIND - 1))
-if [ $# -lt 1 ]; then
+if [[ $# -lt 1 ]]; then
     showhelp
     exit ${INCORRECT_USAGE}
 fi
 
 
 labels="$1"
-while [ $# -gt 1 ]; do
+while [[ $# -gt 1 ]]; do
     shift 1
     labels="${labels},$1"
 done
 
-if [ -z "${base}" ]; then
+if [[ -z "${base}" ]]; then
     assert_success "Determining base branch..." \
                    "base=$(gh api /repos/$(git remote get-url origin | sed 's/git@github.com://')/branches?protected=true --jq '.[0].name')" \
                    "Error determining base branch" \
