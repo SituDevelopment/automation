@@ -5,6 +5,10 @@ codebases and working directories.
 
 ## Tools
 
+-   `branch`
+    -   Creates a new Git branch in the given repository and publishes it to GitHub.
+-   `bugfix-branch`
+    -   Creates a new Git bug fix branch in the given repository and publishes it to GitHub.
 -   `clone-mongo-db`
     -   Clones a MongoDB database.
 -   `create-pr`
