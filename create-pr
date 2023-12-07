@@ -4,7 +4,7 @@
 # Creates a GitHub pull request with the given properties.
 #
 # Usage:
-#   create-pr [-b <base-branch>] <label> [<label> ...]
+#   create-pr [-b <base-branch>] [<label> ...]
 #   create-pr -h
 #
 # Arguments:
@@ -37,21 +37,21 @@ GITHUB_ERROR=2
 #######################################
 showhelp() {
 # Get list of labels for the current repository
-labels=$(gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
-if [[ -n "${labels}" ]]; then
-    labels=$'Available labels:\n'$labels
+label_options=$(gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
+if [[ -n "${label_options}" ]]; then
+    label_options=$'Available labels:\n'$label_options
 fi
 
 cat << EOF
 Usage:
-  create-pr [-b <base-branch>] <label> [<label> ...]
+  create-pr [-b <base-branch>] [<label> ...]
   create-pr -h
 
 Creates a GitHub pull request with the given properties.
 
 Arguments:
     <label>             Label to add to the pull request.
-                        ${labels}
+                        ${label_options}
 
 Options:
     -b <base-branch>    Name of the branch from which to pull changes.
@@ -95,17 +95,19 @@ while getopts "b: h" flag; do
 done
 
 shift $((OPTIND - 1))
-if [[ $# -lt 1 ]]; then
-    showhelp
-    exit ${INCORRECT_USAGE}
+if [[ $# -gt 0 ]]; then
+    labels="--label '$1"
+    shift
 fi
 
-
-labels="$1"
-while [[ $# -gt 1 ]]; do
-    shift 1
+while [[ $# -gt 0 ]]; do
     labels="${labels},$1"
+    shift
 done
+
+if [[ -n "${labels}" ]]; then
+    labels="${labels}'"
+fi
 
 if [[ -z "${base}" ]]; then
     assert_success "Determining base branch..." \
@@ -117,7 +119,7 @@ fi
 
 
 assert_success "Creating pull request..." \
-               "gh pr create --assignee @me --base '${base}' --fill --label '${labels}'" \
+               "gh pr create --assignee @me --base '${base}' --fill ${labels}" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
