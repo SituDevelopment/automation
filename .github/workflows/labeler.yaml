@@ -1,0 +1,7 @@
+name: Label Pull Requests
+
+on: pull_request
+
+jobs:
+  labeler:
+    uses: SituDevelopment/.github/.github/workflows/labeler.yaml@feature/triage-prs
