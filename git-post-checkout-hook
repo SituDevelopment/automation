@@ -41,13 +41,13 @@ if [[ $? -eq 0 ]]; then
 
     source venv/bin/activate > /dev/null
 
-    echo "Ensuring updated depencencies (including Black) are installed..."
-    pip install --upgrade pip > /dev/null
-    pip install black isort > /dev/null
-
+    echo "Installing dependencies..."
     if [[ -f "requirements.txt" ]]; then
         pip install --requirement requirements.txt > /dev/null
     fi
+
+    echo "Updating pip, black and isort..."
+    pip install --upgrade pip black isort > /dev/null
 
     pip freeze > requirements.txt
 fi
