@@ -111,7 +111,7 @@ fi
 
 if [[ -z "${base}" ]]; then
     assert_success "Determining base branch..." \
-                   "base=$(gh api /repos/$(git remote get-url origin | sed 's/git@github.com://')/branches?protected=true --jq '.[0].name')" \
+                   "base=$(gh api /repos/$(git remote get-url origin | sed 's/git@github.com://' | sed 's/.git$//g')/branches?protected=true --jq '.[0].name')" \
                    "Error determining base branch" \
                    ${GITHUB_ERROR} \
                    "Base branch determined\n"
