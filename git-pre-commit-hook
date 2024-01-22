@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # Runs commands which ensure the required formatters are installed and that the
 # required files are formatted before committing.

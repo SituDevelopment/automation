@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # Runs commands which initialise the local development environment after checking out a
 # Git repository.

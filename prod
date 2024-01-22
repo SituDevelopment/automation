@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # Warning:
 #   This command enables a legacy method of deployment.
