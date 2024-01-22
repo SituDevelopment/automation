@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 #
 # Creates a new Git feature branch in the given repository and publishes it to GitHub.
