@@ -18,11 +18,11 @@ if [[ -f "package.json" ]]; then
 fi
 
 git diff --staged --name-only \
-    | xargs -I % echo "[ -f % ] && [[ % =~ .py ]] && black % && isort --profile black % || exit 0" \
+    | xargs -I % echo "[ -f % ] && black % && isort --profile black % || exit 0" \
     | sh
 
 git diff --staged --name-only \
-    | xargs -I % echo "[ -f % ] && [[ % =~ .html|.html.jinja|.css|.json|.js|.ts|.jsx|.tsx|.cjs ]] && npx prettier --write % || exit 0" \
+    | xargs -I % echo "[ -f % ] && npx prettier --write % || exit 0" \
     | sh
 
 git diff --staged --name-only \
