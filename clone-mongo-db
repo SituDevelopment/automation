@@ -97,3 +97,6 @@ assert_success "Cloning database $1 to $2..." \
     "Failed to clone database $1 to $2." \
     ${MONGO_ERROR} \
     "Successfully cloned database $1 to $2."
+
+
+exit ${SUCCESS}
