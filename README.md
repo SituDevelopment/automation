@@ -17,14 +17,10 @@ codebases and working directories.
     -   Creates a new Git feature branch in the given repository and publishes it to GitHub.
 -   `find-by-extension`
     -   Determines the existence and echoes the names of files with the given file extension(s).
--   `github`
-    -   Creates a new GitHub repository with test and production branches.
 -   `git-post-checkout-hook`
     -   Initialises the local development environment after checking out a Git repository.
 -   `git-pre-commit-hook`
     -   Ensures formatters are installed and formats staged files before committing.
--   `prod`
-    -   Pushes the local test branch to production.
 
 ## Configurations
 
