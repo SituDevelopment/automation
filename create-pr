@@ -141,6 +141,5 @@ assert_success "Enabling auto-merge..." \
                "Auto-merge enabled\n"
 
 
-echo "Goodbye..."
 exit ${SUCCESS}
 

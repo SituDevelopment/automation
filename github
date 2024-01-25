@@ -125,7 +125,6 @@ read -p "Do you wish to continue? (y/n) " -n 1 -r RESULT
 if [[ ${RESULT} == "y" ]]; then
     echo -e "\n"
 else
-    echo -e "\nGoodbye..."
     exit ${SUCCESS}
 fi
 

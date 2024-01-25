@@ -223,6 +223,4 @@ if [[ ${restart} ]]; then
 fi
 
 
-echo "Goodbye..."
 exit ${SUCCESS}
-
