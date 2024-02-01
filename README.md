@@ -3,6 +3,12 @@
 Tools and configurations for automating processes and ensuring consistency across
 codebases and working directories.
 
+## Installation
+
+```shell
+curl -sSL https://raw.githubusercontent.com/SituDevelopment/automation/feature/installation-script/install.sh | bash
+```
+
 ## Tools
 
 -   `branch`
