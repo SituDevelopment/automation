@@ -14,4 +14,7 @@ for file in $(ls /tmp/automation/*-man); do
     cp ${file} ${dest}
 done
 
+mkdir --parents /usr/local/share/style
+cp /tmp/automation/docstring-template.mustache /usr/local/share/style
+
 rm -rf /tmp/automation
