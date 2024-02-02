@@ -6,7 +6,7 @@ codebases and working directories.
 ## Installation
 
 ```shell
-curl -sSL https://raw.githubusercontent.com/SituDevelopment/automation/feature/installation-script/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/SituDevelopment/automation/main/install.sh | bash
 ```
 
 ## Tools
