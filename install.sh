@@ -4,8 +4,8 @@ curl -L https://api.github.com/repos/SituDevelopment/automation/tarball/main -o 
 tar -xf /tmp/automation.tar --one-top-level=/tmp/automation --strip-components=1
 rm /tmp/automation.tar
 
-# Move executable tools to an accessible location on the PATH, omitting Git hooks
-find /tmp/automation -name git- -prune -o -type f -perm /a+x -exec cp {} /usr/local/bin \;
+# Move executable tools to an accessible location on the PATH
+find /tmp/automation -type f -perm /a+x -exec cp {} /usr/local/bin \;
 
 # Move manual pages to an accessible location
 mkdir --parents /usr/local/share/man/man1
