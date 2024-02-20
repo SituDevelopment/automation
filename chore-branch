@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+#
+# Creates a new Git chore branch in the given repository and publishes it to GitHub.
+# If the VS Code command: `code` is available, the project will be opened in VS Code.
+#
+#
+# Usage:
+#   chore-branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
+#   chore-branch -h
+#
+# Options:
+#   -r                    Reuse the current VS Code window.
+#
+#   -o <owner>            Owner of the repository.
+#                         Defaults to "SituDevelopment".
+#
+#   -b <base-branch>      Name of the branch from which to take the chore branch.
+#                         Defaults to the repository's default branch.
+#
+#   <repository>          Name of the repository.
+#
+#   <branch-name>         Name of the chore branch to create.
+#                         This name will be prefixed with "chore/".
+#
+#   -h                    Display help and exit.
+
+# See '${parameter:offset}' and '${parameter:offset:length}'
+# under https://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion.
+branch ${@:1:$#-1} chore/${@:$#}
