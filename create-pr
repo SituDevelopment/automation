@@ -135,7 +135,7 @@ assert_success "Requesting review from 'Employees' team..." \
 
 
 assert_success "Enabling auto-merge..." \
-               "gh pr merge ${testb} --auto --rebase" \
+               "gh pr merge ${testb} --auto --merge" \
                "Error enabling auto-merge" \
                ${GITHUB_ERROR} \
                "Auto-merge enabled\n"
