@@ -132,6 +132,24 @@ base=${base:=$(gh api /repos/${owner}/${repo}/branches?protected=true --jq '.[0]
 dev=${dev:=""}
 
 
+# if not provided, construct branch name
+if [[ -z "${dev}" ]]; then
+    prefixes=(bug chore feature)
+    issue_labels=$(gh issue view ${issue} --json labels --jq '.labels[].name')
+
+    branch_name=$(gh issue view ${issue} --json title --jq '.title')
+    branch_name=$(echo ${branch_name} | sed -e 's| |-|g')              # convert to kebab-case
+    branch_name=$(echo ${branch_name} | sed -e 's|[^a-zA-Z0-9-]||g')   # remove non-kebab-case characters
+    branch_name=$(echo ${branch_name} | sed -E 's|[A-Z][a-z]+|\L&|g')  # convert non-initialisms to lowercase
+
+    for prefix in "${prefixes[@]}"; do
+        if [[ $issue_labels == *"${prefix}"* ]]; then
+            dev="--name ${prefix}/${branch_name}"
+            break
+        fi
+    done
+fi
+
 # commands predefined to ensure shell expansion works correctly
 branch_command="gh issue develop '${issue}' --base '${base}' ${dev}"
 replacement_command="sed -e s|github.com/${owner}/${repo}/tree/||g"
