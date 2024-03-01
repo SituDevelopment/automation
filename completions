@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+#
+# Initialises autocompletion for the Automation suite.
+
+completions=(branch create-pr)
+
+for completion in ${completions[@]}; do
+  if [ -f "./${completion}.completion" ]; then
+    source "./${completion}.completion"
+  fi
+done
+
