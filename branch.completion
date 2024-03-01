@@ -51,10 +51,10 @@ function _branch() {
 
     # complete repository
     if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
-        if gh api /orgs/${owner} --silent 2> /dev/null; then
+        if bkt --time-to-live 10m --discard-failures --scope $$ -- gh api /orgs/${owner} --silent 2> /dev/null; then
             # owner is an org
             repos=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api "/orgs/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
-        elif gh api /users/${owner} --silent 2> /dev/null; then
+        elif bkt --time-to-live 10m --discard-failures --scope $$ -- gh api /users/${owner} --silent 2> /dev/null; then
             # owner is a user
             repos=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api "/users/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
         else

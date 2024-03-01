@@ -17,11 +17,11 @@ function _create-pr() {
     # create-pr [-b <base-branch>] [<label> ...]
     if [[ ${COMP_CWORD} -eq 2 && "${cur}" == "-b" ]]; then
         # Complete the base branch
-        branches=$(gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches --jq '.[].name')
+        branches=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches --jq '.[].name')
         COMPREPLY=($(compgen -W "${branches}" -- "${cur}"))
     else
         # Complete the labels
-        labels=$(gh label list --json name --jq '.[].name' 2> /dev/null)
+        labels=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh label list --json name --jq '.[].name' 2> /dev/null)
         if [[ ${COMP_CWORD} -eq 1 ]]; then
             COMPREPLY=($(compgen -W "${labels} ${options}" -- "${cur}"))
         else
