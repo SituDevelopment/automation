@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# Provides autocompletion for the `create-pr` command.
+
+
+function _create-pr() {
+    cur=${COMP_WORDS[${COMP_CWORD}]}
+
+    # create-pr [-b <base-branch>] [<label> ...]
+    options="-b"
+
+    if [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != "true" ]]; then
+        # Not in a git repository
+        return
+    fi
+
+    # create-pr [-b <base-branch>] [<label> ...]
+    if [[ ${COMP_CWORD} -eq 2 && "${cur}" == "-b" ]]; then
+        # Complete the base branch
+        branches=$(gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches --jq '.[].name')
+        COMPREPLY=($(compgen -W "${branches}" -- "${cur}"))
+    else
+        # Complete the labels
+        labels=$(gh label list --json name --jq '.[].name' 2> /dev/null)
+        if [[ ${COMP_CWORD} -eq 1 ]]; then
+            COMPREPLY=($(compgen -W "${labels} ${options}" -- "${cur}"))
+        else
+            COMPREPLY=($(compgen -W "${labels}" -- "${cur}"))
+        fi
+    fi
+}
+
+complete -F _create-pr create-pr
