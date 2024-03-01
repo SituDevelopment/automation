@@ -3,6 +3,9 @@
 #
 # Initialises autocompletion for the Automation suite.
 
+export BKT_TTL="1m"
+export BKT_SCOPE="$$"
+
 completions=(branch create-pr)
 
 for completion in ${completions[@]}; do

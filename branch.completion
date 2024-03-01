@@ -51,12 +51,12 @@ function _branch() {
 
     # complete repository
     if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
-        if bkt --time-to-live 10m --discard-failures --scope $$ -- gh api /orgs/${owner} --silent 2> /dev/null; then
+        if bkt --discard-failures -- gh api /orgs/${owner} --silent 2> /dev/null; then
             # owner is an org
-            repos=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api "/orgs/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
-        elif bkt --time-to-live 10m --discard-failures --scope $$ -- gh api /users/${owner} --silent 2> /dev/null; then
+            repos=$(bkt --discard-failures -- gh api "/orgs/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
+        elif bkt --discard-failures -- gh api /users/${owner} --silent 2> /dev/null; then
             # owner is a user
-            repos=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api "/users/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
+            repos=$(bkt --discard-failures -- gh api "/users/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
         else
             # owner does not exist
             repos=""
@@ -68,7 +68,7 @@ function _branch() {
     # complete base-branch
     if [[ "${prev}" == "-b" ]]; then
         repo=${COMP_WORDS[$((${option_offset}+1))]}
-        branches=$(bkt --time-to-live 10m --discard-failures --scope $$ -- gh api "/repos/${owner}/${repo}/branches" --jq '.[].name' 2> /dev/null)
+        branches=$(bkt --discard-failures -- gh api "/repos/${owner}/${repo}/branches" --jq '.[].name' 2> /dev/null)
         COMPREPLY=($(compgen -W "${branches}" -- "${cur}"))
     fi
 }
