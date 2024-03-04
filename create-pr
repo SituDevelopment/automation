@@ -118,8 +118,11 @@ if [[ -z "${base}" ]]; then
 fi
 
 
+title=$(git branch --show-current)
+title=$(echo ${title} | sed -e 's|\(.*\)/|\u\1:-|')  # Replace '<type>/' prefix with '<Type>:-'
+title=$(echo ${title} | sed -e 's|-\(.\)| \u\1|g')   # convert kebab-case to Title Case
 assert_success "Creating pull request..." \
-               "gh pr create --assignee @me --base '${base}' --fill ${labels}" \
+               "gh pr create --assignee @me --base '${base}' --fill ${labels} --title '${title}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
