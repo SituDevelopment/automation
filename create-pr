@@ -37,7 +37,7 @@ GITHUB_ERROR=2
 #######################################
 showhelp() {
 # Get list of labels for the current repository
-label_options=$(gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
+label_options=$(bkt --discard-failures -- gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
 if [[ -n "${label_options}" ]]; then
     label_options=$'Available labels:\n'$label_options
 fi
@@ -111,7 +111,7 @@ fi
 
 if [[ -z "${base}" ]]; then
     assert_success "Determining base branch..." \
-                   "base=$(gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches?protected=true --jq '.[0].name')" \
+                   "base=$(bkt --discard-failures -- gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches?protected=true --jq '.[0].name')" \
                    "Error determining base branch" \
                    ${GITHUB_ERROR} \
                    "Base branch determined\n"
