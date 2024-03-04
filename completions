@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+#
+# Initialises autocompletion for the Automation suite.
+
+export BKT_TTL="1m"
+export BKT_SCOPE="$$"
+
+completions=(branch create-pr)
+
+for completion in ${completions[@]}; do
+  if [ -f "./${completion}.completion" ]; then
+    source "./${completion}.completion"
+  fi
+done
+

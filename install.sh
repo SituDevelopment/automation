@@ -7,6 +7,18 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of
 && apt update \
 && apt install gh -y
 
+export CARGO_HOME=/usr/local/cargo
+export RUSTUP_HOME=/usr/local/rustup
+export UPDATE_RC="true"
+curl https://sh.rustup.rs -sSf | bash -s -- --no-modify-path -y
+echo "export PATH=\"${PATH}:/usr/local/cargo/bin\"" >> /etc/profile
+source /usr/local/cargo/env
+rustup default stable
+apt install build-essential -y
+cargo install bkt
+
+echo "source /usr/local/cargo/env" >> /etc/bash.bashrc
+
 curl -L https://api.github.com/repos/SituDevelopment/automation/tarball/main -o /tmp/automation.tar
 tar -xf /tmp/automation.tar --one-top-level=/tmp/automation --strip-components=1
 rm /tmp/automation.tar
