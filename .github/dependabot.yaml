@@ -1,22 +1,31 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    reviewers:
-      - "SituDevelopment/employees"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      time: "13:00"
+      timezone: "Australia/Brisbane"
 
   - package-ecosystem: "npm"
-    reviewers:
-      - "SituDevelopment/employees"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      time: "13:00"
+      timezone: "Australia/Brisbane"
 
   - package-ecosystem: "pip"
-    reviewers:
-      - "SituDevelopment/employees"
     directory: "/"
+    groups:
+      pydantic:
+        patterns:
+          - "pydantic"
+          - "pydantic-core"
+      pylint:
+        patterns:
+          - "astroid"
+          - "pylint"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      time: "13:00"
+      timezone: "Australia/Brisbane"

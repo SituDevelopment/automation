@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 #
 # Creates a new development branch for a GitHub issue.
@@ -128,7 +128,7 @@ issue=$2
 # set default values for unset variables
 reuse=${reuse:=""}
 owner=${owner:="SituDevelopment"}
-base=${base:=$(gh api /repos/${owner}/${repo}/branches?protected=true --jq '.[0].name')}
+base=${base:=$(bkt --discard-failures -- gh api /repos/${owner}/${repo}/branches?protected=true --jq '.[0].name')}
 dev=${dev:=""}
 
 

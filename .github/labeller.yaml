@@ -1,7 +1,10 @@
 bug:
   - head-branch: ["bug/*"]
 
-enhancement:
+chore:
+  - head-branch: ["chore/*"]
+
+feature:
   - head-branch: ["feature/*"]
 
 dependencies:

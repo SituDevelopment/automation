@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 #
 # Creates a GitHub pull request with the given properties.
@@ -37,7 +37,7 @@ GITHUB_ERROR=2
 #######################################
 showhelp() {
 # Get list of labels for the current repository
-label_options=$(gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
+label_options=$(bkt --discard-failures -- gh label list --json name --template '{{range .}}{{"\t\t\t - "}}{{.name}}{{"\n"}}{{end}}' 2> /dev/null)
 if [[ -n "${label_options}" ]]; then
     label_options=$'Available labels:\n'$label_options
 fi
@@ -111,15 +111,18 @@ fi
 
 if [[ -z "${base}" ]]; then
     assert_success "Determining base branch..." \
-                   "base=$(gh api /repos/$(git remote get-url origin | sed 's/git@github.com://')/branches?protected=true --jq '.[0].name')" \
+                   "base=$(bkt --discard-failures -- gh api /repos/$(git remote get-url origin | sed 's/^git@github.com://' | sed 's/.git$//g')/branches?protected=true --jq '.[0].name')" \
                    "Error determining base branch" \
                    ${GITHUB_ERROR} \
                    "Base branch determined\n"
 fi
 
 
+title=$(git branch --show-current)
+title=$(echo ${title} | sed -e 's|\(.*\)/|\u\1:-|')  # Replace '<type>/' prefix with '<Type>:-'
+title=$(echo ${title} | sed -e 's|-\(.\)| \u\1|g')   # convert kebab-case to Title Case
 assert_success "Creating pull request..." \
-               "gh pr create --assignee @me --base '${base}' --fill ${labels}" \
+               "gh pr create --assignee @me --base '${base}' --fill ${labels} --title '${title}'" \
                "Error creating pull request" \
                ${GITHUB_ERROR} \
                "Pull request created\n"
@@ -134,13 +137,5 @@ assert_success "Requesting review from 'Employees' team..." \
                "Review requested\n"
 
 
-assert_success "Enabling auto-merge..." \
-               "gh pr merge ${testb} --auto --rebase" \
-               "Error enabling auto-merge" \
-               ${GITHUB_ERROR} \
-               "Auto-merge enabled\n"
-
-
-echo "Goodbye..."
 exit ${SUCCESS}
 
