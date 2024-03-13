@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Provides autocompletion for the `branch`, `bugfix-branch`, `chore-branch` and `feature-branch` commands.
+# Provides autocompletion for the `branch` command.
 
 function _remove_from_array() {
     local array=("$@")
@@ -73,4 +73,4 @@ function _branch() {
     fi
 }
 
-complete -F _branch branch bugfix-branch chore-branch feature-branch
+complete -F _branch branch
