@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Provides autocompletion for the `branch`, `bugfix-branch`, `chore-branch` and `feature-branch` commands.
+# Provides autocompletion for the `branch` command.
 
 function _remove_from_array() {
     local array=("$@")
@@ -19,8 +19,9 @@ function _branch() {
     cur=${COMP_WORDS[${COMP_CWORD}]}
     prev=${COMP_WORDS[${COMP_CWORD}-1]}
 
-    # branch [-r] [-o <owner>] [-b <base-branch>] <repository> <branch-name>
-    options="-r -o -b"
+    # branch [-r] [-o <owner>] [-b <base-branch>] [-d <dev-branch>] <repository> <issue-number>
+    # branch [-r] [-o <owner>] [-b <base-branch>] -d <dev-branch> <repository> --no-issue
+    options="-r -o -b -d"
     option_offset=0
 
     owner="SituDevelopment"
@@ -38,7 +39,12 @@ function _branch() {
             -b)
                 options=$(_remove_from_array "-b" ${options})
                 option_offset=$((${option_offset}+2))
-                base_branch=${COMP_WORDS[$i+1]}  # TODO: autocomplete base-branch based off of owner and repository
+                base_branch=${COMP_WORDS[$i+1]}
+                ;;
+            -d)
+                options=$(_remove_from_array "-d" ${options})
+                option_offset=$((${option_offset}+2))
+                dev_branch=${COMP_WORDS[$i+1]}
                 ;;
         esac
     done
@@ -49,28 +55,26 @@ function _branch() {
         return
     fi
 
-    # complete repository
-    if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
-        if bkt --discard-failures -- gh api /orgs/${owner} --silent 2> /dev/null; then
-            # owner is an org
-            repos=$(bkt --discard-failures -- gh api "/orgs/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
-        elif bkt --discard-failures -- gh api /users/${owner} --silent 2> /dev/null; then
-            # owner is a user
-            repos=$(bkt --discard-failures -- gh api "/users/${owner}/repos?per_page=100" --jq '.[].name' 2> /dev/null)
-        else
-            # owner does not exist
-            repos=""
-        fi
-
-        COMPREPLY=($(compgen -W "${repos} ${options}" -- "${cur}"))
-    fi
-
     # complete base-branch
     if [[ "${prev}" == "-b" ]]; then
         repo=${COMP_WORDS[$((${option_offset}+1))]}
         branches=$(bkt --discard-failures -- gh api "/repos/${owner}/${repo}/branches" --jq '.[].name' 2> /dev/null)
         COMPREPLY=($(compgen -W "${branches}" -- "${cur}"))
     fi
+
+    # complete repository
+    if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
+        repos=$(bkt --discard-failures -- gh repo list "${owner}" --json name --limit 100 --jq '.[].name' 2> /dev/null)
+        COMPREPLY=($(compgen -W "${repos} ${options}" -- "${cur}"))
+    fi
+
+    # complete issue number
+    if [[ ${COMP_CWORD} -eq $((${option_offset}+2)) ]]; then
+        no_issue_flag=$([[ -n ${dev_branch+placeholder} ]] && echo "--no-issue")
+        repo=${COMP_WORDS[$((${option_offset}+1))]}
+        issues=$(bkt --discard-failures -- gh issue list --repo "${owner}/${repo}" --json number --jq '.[].number' 2> /dev/null)
+        COMPREPLY=($(compgen -W "${issues} ${no_issue_flag}" -- "${cur}"))
+    fi
 }
 
-complete -F _branch branch bugfix-branch chore-branch feature-branch
+complete -F _branch branch
