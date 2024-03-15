@@ -49,17 +49,17 @@ function _branch() {
         return
     fi
 
-    # complete repository
-    if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
-        repos=$(bkt --discard-failures -- gh repo list "${owner}" --json name --limit 100 --jq '.[].name' 2> /dev/null)
-        COMPREPLY=($(compgen -W "${repos} ${options}" -- "${cur}"))
-    fi
-
     # complete base-branch
     if [[ "${prev}" == "-b" ]]; then
         repo=${COMP_WORDS[$((${option_offset}+1))]}
         branches=$(bkt --discard-failures -- gh api "/repos/${owner}/${repo}/branches" --jq '.[].name' 2> /dev/null)
         COMPREPLY=($(compgen -W "${branches}" -- "${cur}"))
+    fi
+
+    # complete repository
+    if [[ ${COMP_CWORD} -eq $((${option_offset}+1)) ]]; then
+        repos=$(bkt --discard-failures -- gh repo list "${owner}" --json name --limit 100 --jq '.[].name' 2> /dev/null)
+        COMPREPLY=($(compgen -W "${repos} ${options}" -- "${cur}"))
     fi
 }
 
