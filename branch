@@ -147,18 +147,18 @@ if [[ -z "${branch}" ]]; then
     fi
 
     assert_success "Looking for issue..." \
-                   "gh issue view ${issue} --json '' &> /dev/null" \
+                   "gh issue view ${issue} --repo '${owner}/${repo}' --json '' &> /dev/null" \
                    "Issue not found" \
                    ${INCORRECT_USAGE} \
                    "Issue found\n"
 
-    branch=$(gh issue view ${issue} --json title --jq '.title')
+    branch=$(gh issue view ${issue} --repo "${owner}/${repo}" --json title --jq '.title')
     branch=$(echo ${branch} | sed -e 's| |-|g')              # convert to kebab-case
     branch=$(echo ${branch} | sed -e 's|[^a-zA-Z0-9-]||g')   # remove non-kebab-case characters
     branch=$(echo ${branch} | sed -E 's|[A-Z][a-z]+|\L&|g')  # convert non-initialisms to lowercase
 
     prefixes=(bug chore feature)
-    issue_labels=$(gh issue view ${issue} --json labels --jq '.labels[].name')
+    issue_labels=$(gh issue view ${issue} --repo "${owner}/${repo}" --json labels --jq '.labels[].name')
     for prefix in "${prefixes[@]}"; do
         if [[ $issue_labels == *"${prefix}"* ]]; then
             branch="${prefix}/${branch}"
@@ -191,7 +191,7 @@ if [[ "${issue}" == "--no-issue" ]]; then
                    "Published development branch to remote repository\n"
 else
     assert_success "Creating development branch..." \
-                   "gh issue develop '${issue}' --base '${base}' --name '${branch}'" \
+                   "gh issue develop '${issue}' --repo '${owner}/${repo}' --base '${base}' --name '${branch}' &> /dev/null" \
                    "Error creating development branch" \
                    ${GITHUB_ERROR} \
                    "Created development branch\n"
