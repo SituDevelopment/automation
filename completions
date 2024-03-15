@@ -3,8 +3,9 @@
 #
 # Initialises autocompletion for the Automation suite.
 
-export BKT_TTL="1m"
+export BKT_CACHE_DIR="/tmp/bkt-${USER}"
 export BKT_SCOPE="$$"
+export BKT_TTL="1m"
 
 completions=(branch create-pr)
 
