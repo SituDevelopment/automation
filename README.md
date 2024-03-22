@@ -1,6 +1,6 @@
 # Automation
 
-Tools and configurations for automating processes and ensuring consistency across codebases.
+Tools and configurations for automating parts of the development process.
 
 ## Installation
 
