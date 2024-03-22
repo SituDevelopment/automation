@@ -1,7 +1,6 @@
 # Automation
 
-Tools and configurations for automating processes and ensuring consistency across
-codebases and working directories.
+Tools and configurations for automating processes and ensuring consistency across codebases.
 
 ## Installation
 
