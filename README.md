@@ -1,4 +1,4 @@
-# Automation
+# Automation Suite
 
 Tools and configurations for automating parts of the development process.
 

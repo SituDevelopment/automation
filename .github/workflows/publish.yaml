@@ -1,0 +1,21 @@
+name: Publish Dev Container Feature
+
+on:
+  push:
+    branches: main
+
+jobs:
+  publish-features:
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: devcontainers/action@v1
+        with:
+          publish-features: "true"
+          base-path-to-features: "./devcontainer-feature"
+          features-namespace: "SituDevelopment/devcontainer-features"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
